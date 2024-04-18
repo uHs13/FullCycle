@@ -1,0 +1,18 @@
+mutation createCategory {
+  createCategory(input: {
+    name: "Technology"
+    description: "Technology Courses"
+  }) {
+    id,
+    name,
+    description
+  }
+}
+
+query queryCategories {
+  categories {
+    id
+    name
+    description
+  }
+}
