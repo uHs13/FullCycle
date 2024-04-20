@@ -9,6 +9,26 @@ import (
 	"graphql/graph/model"
 )
 
+func (r *categoryResolver) Course(ctx context.Context, obj *model.Category) ([]*model.Course, error) {
+	categories, err := r.CourseDB.FindByCategoryId(obj.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var modelCourses []*model.Course
+
+	for _, course := range categories {
+		modelCourses = append(modelCourses, &model.Course{
+			ID:          course.ID,
+			Name:        course.Name,
+			Description: &course.Description,
+		})
+	}
+
+	return modelCourses, nil
+}
+
 func (r *mutationResolver) CreateCategory(ctx context.Context, input model.NewCategory) (*model.Category, error) {
 	category, err := r.CategoryDB.Create(input.Name, *input.Description)
 
@@ -77,9 +97,12 @@ func (r *queryResolver) Courses(ctx context.Context) ([]*model.Course, error) {
 	return modelCourses, nil
 }
 
+func (r *Resolver) Category() CategoryResolver { return &categoryResolver{r} }
+
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type categoryResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
