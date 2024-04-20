@@ -29,6 +29,20 @@ func (r *categoryResolver) Course(ctx context.Context, obj *model.Category) ([]*
 	return modelCourses, nil
 }
 
+func (r *courseResolver) Category(ctx context.Context, obj *model.Course) (*model.Category, error) {
+	category, err := r.CategoryDB.FindByCourseId(obj.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Category{
+		ID:          category.ID,
+		Name:        category.Name,
+		Description: category.Description,
+	}, nil
+}
+
 func (r *mutationResolver) CreateCategory(ctx context.Context, input model.NewCategory) (*model.Category, error) {
 	category, err := r.CategoryDB.Create(input.Name, *input.Description)
 
@@ -99,10 +113,13 @@ func (r *queryResolver) Courses(ctx context.Context) ([]*model.Course, error) {
 
 func (r *Resolver) Category() CategoryResolver { return &categoryResolver{r} }
 
+func (r *Resolver) Course() CourseResolver { return &courseResolver{r} }
+
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type categoryResolver struct{ *Resolver }
+type courseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

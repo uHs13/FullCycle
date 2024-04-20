@@ -3,8 +3,8 @@ mutation createCategory {
     name: "Technology"
     description: "Technology Courses"
   }) {
-    id,
-    name,
+    id
+    name
     description
   }
 }
@@ -36,8 +36,8 @@ mutation createCourse {
     description: "Learn how to code using the golang"
     categoryId: "3e3fb380-9440-4398-8db6-3b0f80ba1442"
   }) {
-    id,
-    name,
+    id
+    name
     description
   }
 }
@@ -45,7 +45,20 @@ mutation createCourse {
 query queryCourses {
   courses {
     id
-    name,
+    name
     description
+  }
+}
+
+query queryCoursesWithCategory {
+  courses {
+    id
+    name
+    description
+    category {
+      id
+      name
+      description
+    }
   }
 }
