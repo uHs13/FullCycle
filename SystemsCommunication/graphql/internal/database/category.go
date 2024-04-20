@@ -14,8 +14,8 @@ type Category struct {
 }
 
 const (
-	createQuery  = "INSERT INTO categories (id, name, description) VALUES (?, ?, ?)"
-	findAllQuery = "SELECT id, name, description FROM categories"
+	createCategoryQuery    = "INSERT INTO categories (id, name, description) VALUES (?, ?, ?)"
+	findAllCategoriesQuery = "SELECT id, name, description FROM categories"
 )
 
 func NewCategory(db *sql.DB) *Category {
@@ -28,7 +28,7 @@ func (c *Category) Create(
 ) (Category, error) {
 	id := uuid.New().String()
 
-	statement, err := c.db.Prepare(createQuery)
+	statement, err := c.db.Prepare(createCategoryQuery)
 
 	if err != nil {
 		return Category{}, err
@@ -54,7 +54,7 @@ func (c *Category) Create(
 }
 
 func (c *Category) FindAll() ([]Category, error) {
-	statement, err := c.db.Prepare(findAllQuery)
+	statement, err := c.db.Prepare(findAllCategoriesQuery)
 
 	if err != nil {
 		return nil, err

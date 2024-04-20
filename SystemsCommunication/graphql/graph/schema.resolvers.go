@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"graphql/graph/model"
 )
 
@@ -25,7 +24,17 @@ func (r *mutationResolver) CreateCategory(ctx context.Context, input model.NewCa
 }
 
 func (r *mutationResolver) CreateCourse(ctx context.Context, input model.NewCourse) (*model.Course, error) {
-	panic(fmt.Errorf("not implemented: CreateCourse - createCourse"))
+	course, err := r.CourseDB.Create(input.Name, *input.Description, input.CategoryID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Course{
+		ID:          course.ID,
+		Name:        course.Name,
+		Description: &course.Description,
+	}, nil
 }
 
 func (r *queryResolver) Categories(ctx context.Context) ([]*model.Category, error) {
@@ -49,7 +58,23 @@ func (r *queryResolver) Categories(ctx context.Context) ([]*model.Category, erro
 }
 
 func (r *queryResolver) Courses(ctx context.Context) ([]*model.Course, error) {
-	panic(fmt.Errorf("not implemented: Courses - courses"))
+	courses, err := r.CourseDB.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var modelCourses []*model.Course
+
+	for _, course := range courses {
+		modelCourses = append(modelCourses, &model.Course{
+			ID:          course.ID,
+			Name:        course.Name,
+			Description: &course.Description,
+		})
+	}
+
+	return modelCourses, nil
 }
 
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }

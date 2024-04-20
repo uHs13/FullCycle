@@ -16,3 +16,23 @@ query queryCategories {
     description
   }
 }
+
+mutation createCourse {
+  createCourse(input: {
+    name: "Golang Course"
+    description: "Learn how to code using the golang"
+    categoryId: "3e3fb380-9440-4398-8db6-3b0f80ba1442"
+  }) {
+    id,
+    name,
+    description
+  }
+}
+
+query queryCourses {
+  courses {
+    id
+    name,
+    description
+  }
+}
