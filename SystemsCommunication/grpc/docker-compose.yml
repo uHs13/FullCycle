@@ -10,6 +10,8 @@ services:
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    healthcheck:
+      test: "exit 0"
   phpmyadmin:
     container_name: grpc_phpmyadmin
     image: phpmyadmin:5.2-apache
@@ -24,6 +26,10 @@ services:
     build: .
     volumes:
       - .:/user/src/app
+    ports:
+      - 50051:50051
     depends_on:
-      - db
-      - phpmyadmin
+      db:
+        condition: service_healthy
+      phpmyadmin:
+        condition: service_started

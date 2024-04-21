@@ -1,0 +1,8 @@
+Create the categories table inside the db before start
+
+docker exec -it grpc_container evans -r repl
+
+show package
+package pb
+service CategoryService
+call CreateCategory

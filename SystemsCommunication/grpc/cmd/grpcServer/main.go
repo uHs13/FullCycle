@@ -12,11 +12,6 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	protocol   = "tpc"
-	serverPort = "50051"
-)
-
 func main() {
 	if err := dotenv.Load(); err != nil {
 		panic(err)
@@ -37,7 +32,9 @@ func main() {
 	pb.RegisterCategoryServiceServer(grpcServer, categoryService)
 	reflection.Register(grpcServer)
 
-	listener, err := net.Listen(protocol, fmt.Sprintf(":%s", serverPort))
+	listener, err := net.Listen("tcp", ":50051")
+
+	fmt.Println("OK")
 
 	if err != nil {
 		panic(err)
