@@ -1,0 +1,29 @@
+services:
+  db:
+    container_name: grpc_db
+    image: mariadb:10.4
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  phpmyadmin:
+    container_name: grpc_phpmyadmin
+    image: phpmyadmin:5.2-apache
+    environment:
+      PMA_HOST: db
+    ports:
+      - 8081:80
+    depends_on:
+      - db
+  grpc:
+    container_name: grpc_container
+    build: .
+    volumes:
+      - .:/user/src/app
+    depends_on:
+      - db
+      - phpmyadmin
