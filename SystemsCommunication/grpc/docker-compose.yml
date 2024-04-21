@@ -26,10 +26,6 @@ services:
     build: .
     volumes:
       - .:/user/src/app
-    ports:
-      - 50051:50051
     depends_on:
       db:
         condition: service_healthy
-      phpmyadmin:
-        condition: service_started

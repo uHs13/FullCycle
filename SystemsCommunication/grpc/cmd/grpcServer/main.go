@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"grpc/internal/database"
 	"grpc/internal/dotenv"
 	"grpc/internal/pb"
@@ -33,8 +32,6 @@ func main() {
 	reflection.Register(grpcServer)
 
 	listener, err := net.Listen("tcp", ":50051")
-
-	fmt.Println("OK")
 
 	if err != nil {
 		panic(err)
