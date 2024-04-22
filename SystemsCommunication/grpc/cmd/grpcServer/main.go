@@ -6,12 +6,15 @@ import (
 	"grpc/internal/pb"
 	"grpc/internal/service"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	time.Sleep(15 * time.Second)
+
 	if err := dotenv.Load(); err != nil {
 		panic(err)
 	}
