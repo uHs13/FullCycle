@@ -62,3 +62,25 @@ _ consul join [ipDoOutroNode]
 _ consul members
 
 Deve ser possível visualizar os dois servers na listagem
+
+Repetir os mesmos passos para o 03
+
+Configuração do client
+
+_ ifconfig
+
+_ mkdir /var/lib/consul
+
+_ mkdir /etc/consul.d
+
+_ consul agent -bind=[ipDoNodeClient] -data-dir=/var/lib/consul -config-dir=/etc/consul.d
+
+_ consul members
+
+Verificar que ele está sozinho e é um client
+
+_ consul join [ipDeUmServer]
+
+_ consul members
+
+Verificar que ele está agora no cluster

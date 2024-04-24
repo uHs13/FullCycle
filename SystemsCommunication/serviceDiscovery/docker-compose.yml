@@ -14,3 +14,10 @@ services:
     container_name: consulserverThree
     hostname: consulserverThree
     command: ['tail', '-f', '/dev/null']
+  consulclient:
+    image: consul:1.10
+    container_name: consulclient
+    hostname: consulclient
+    command: ['tail', '-f', '/dev/null']
+    volumes:
+      - ./clients/consulclient:/etc/consul.d
