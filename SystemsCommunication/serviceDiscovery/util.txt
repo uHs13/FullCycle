@@ -1,0 +1,64 @@
+_ docker exec -it consul sh
+
+_ consul agent -dev
+
+_ consul members => Lista os nodes do nosso cluster
+
+Os membros do cluster são do tipo server ou client
+É recomendado executar em produção ao menos três servers
+Acima disso sempre números impares
+
+Os servers utilizam o raft protocol para definir quem será o lider
+As informações replicadas para o lider são replicadas automaticamente
+para os outros servidores
+Em um client utilizando o consul é possível acessar o comando members também
+
+Consul tem uma API rest e um servidor DNS
+Os dois recursos podem ser utilizados para pegar informações
+
+_ curl localhost:8500/v1/catalog/nodes
+
+datacenter é uma separação lógica entre redes consul. Não necessariamente em um
+datacenter distante
+Para conseguir trabalhar de maneira mais eficiente, o consul utiliza o gossip protocol
+para distribuir informações e sincronizar os dados
+O gossip protocol tem uma latência menor quando os membros estão na mesma redes
+
+_ apk -U add bind-tools
+
+_ dig @localhost -p 8600
+
+_ dig @localhost -p 8600 consul.node.consul
+
+_ dig @localhost -p 8600 consul.node.consul +short
+
+O consul tem o agente que pode estar no modo client ou server
+
+Construção de cluster com três servers
+
+_ docker exec -it consulserver sh
+
+_ ifconfig
+
+_ mkdir /var/lib/consul
+
+_ mkdir /etc/consul.d
+
+_ consul agent -server -bootstrap-expect=3 -node=consulserver -bind=[ipdoIfconfig] -data-dir=/var/lib/consul -config-dir=/etc/consul.d
+
+_ docker exec -it consulserver sh
+
+_ consul members
+
+Repetir mesmos passos para o server 02
+
+Ao executar o consul members vai ser possível ver que não é exibido o segundo node
+Os dois nodes precisam se conhecer, precisamos dar um join entre eles
+
+No terminal do 01 ou 02
+
+_ consul join [ipDoOutroNode]
+
+_ consul members
+
+Deve ser possível visualizar os dois servers na listagem
