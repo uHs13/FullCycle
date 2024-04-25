@@ -84,3 +84,38 @@ _ consul join [ipDeUmServer]
 _ consul members
 
 Verificar que ele está agora no cluster
+
+Registrando um serviço (dentro do container do client)
+
+Uma coisa é registrar um serviço, a outra é você subir o serviço na máquina
+
+Temos que subir um agente na mesma máquina onde o serviço está rodando
+
+_ consul reload
+
+Esse comando faz com que os serviços sejam atualizados
+
+_ apk -U add bind-tools
+
+_ dig @localhost -p 8600 SRV
+
+_ dig @localhost -p 8600 nginx.service.consul
+
+Entrar no container de um dos servers e rodar o mesmo comando para verificar que o resultado é o mesmo
+Isso significa que todas as máquinas do cluster estão cientes da existência do serviço
+
+_ curl localhost:8500/v1/catalog/services
+
+Verificar serviços registrados através da API do consul
+
+_ consul catalog nodes -service nginx
+
+Traz os nodes onde o serviço especificado foi registrado
+
+_ consul catalog nodes -detailed
+
+Exibe mais informações dos nodes que estão registados no cluster
+
+_ dig @localhost -p 8600 web.nginx.service.consul
+
+Pesquisa de serviços pelo DNS do cluster através da tag registrada
