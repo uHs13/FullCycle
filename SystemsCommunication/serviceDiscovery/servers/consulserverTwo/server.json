@@ -1,7 +1,9 @@
 {
     "server": true,
-    "bind_addr": "172.18.0.5",
+    "bind_addr": "172.19.0.2",
     "bootstrap_expect": 3,
     "data_dir": "/tmp",
-    "retry_join": ["172.18.0.3", "172.18.0.4"]
+    "retry_join": ["172.19.0.3"],
+    "node_name": "consulserverTwo",
+    "encrypt": "28cpVp8koatNASPRt72kpoY+7PTaQwal+nsEkElDNj8="
 }
