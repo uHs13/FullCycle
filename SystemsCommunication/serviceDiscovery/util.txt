@@ -119,3 +119,89 @@ Exibe mais informações dos nodes que estão registados no cluster
 _ dig @localhost -p 8600 web.nginx.service.consul
 
 Pesquisa de serviços pelo DNS do cluster através da tag registrada
+
+Criando um outro node com o mesmo serviço registrado
+
+Após criar a nova máquina, precisamos repetir o comando de criação de agente com uma diferença
+
+_ mkdir /var/lib/consul
+
+_ consul agent -bind=[ipDoNodeClient] -data-dir=/var/lib/consul -config-dir=/etc/consul.d -retry-join=[ipDeUmNodeServer] -retry-join=[ipDeOutroNodeServer]
+
+Com a flag -retry-join podemos definir em quais servers o novo client vai tentar se ligar. Caso não consiga se comunicar com o primeiro, ele tenta no segundo
+
+_ consul members
+
+Verificar que temos o segundo client rodando
+
+_ apk -U add bind-tools
+
+_ dig @localhost -p 8600 nginx.service.consul
+
+Verificar via DNS que temos dois nodes executando o serviço do nginx
+
+Sempre temos um agente consul e o serviço sendo executado no node client
+
+Caso a gente precise consultar algum outro serviço, não é necessário consultar o server do consul
+
+É possível consultar o próprio client do consul, porque todos os serviços ficam sincronizados entre os servers e agents
+
+Os clients tem todas as informações que os servers tem, com exceção da parte de membership, que é o processo onde os servers definem quem vai ser o líder
+
+Health check ou checks verificam se o serviço instalado no node está saudável. O consul não vai mostrar o ip de um serviço que está fora
+
+Adicionar o check dentro do json de um dos serviços
+
+_ dig @localhost -p 8600 nginx.service.consul
+
+Verificar que temos dois nodes com o serviço do nginx registrado
+
+_ consul reload
+
+Verificar que o serviço com check sumiu da listagem do dig
+O check verificou que o serviço não está saudável no node e removeu ele da listagem
+
+Acessar o terminal do container que tem o check
+
+_ app add nginx
+
+_ ps
+
+Verificar que o nginx ainda não está sendo executado
+
+_ nginx
+
+_ ps
+
+Inicializar o nginx no node e verificar que está sendo executado
+
+_ curl localhost
+
+Verificar que a porta 80 tem um retorno, porém não é o ideal, pois é um 404
+
+_ apk add vim
+
+_ mkdir /usr/share/nginx/html -p
+
+_ vim /etc/nginx/http.d/default.conf
+
+Substituir isso:
+
+#Everything is a 404
+location / {
+    return 404
+}
+
+Por isso:
+
+root /usr/share/nginx/html;
+
+_ vim /usr/share/nginx/html/index.html
+
+Digitar alguma coisa no html
+
+_ nginx -s reload
+
+Esse comando faz o reload do nginx
+
+_ dig @localhost -p 8600 nxing.service.consulserver
