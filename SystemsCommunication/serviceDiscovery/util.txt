@@ -205,3 +205,4 @@ _ nginx -s reload
 Esse comando faz o reload do nginx
 
 _ dig @localhost -p 8600 nxing.service.consulserver
+
