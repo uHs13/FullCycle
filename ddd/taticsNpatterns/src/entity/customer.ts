@@ -13,16 +13,6 @@ export default class Customer {
         this.validate();
     }
 
-    validate() {
-        if (this._id.length === 0) {
-            throw new Error('Id is required');
-        }
-
-        if (this._name.length === 0) {
-            throw new Error('Name is required');
-        }
-    }
-
     set address(address: Address) {
         this._address = address;
     }
@@ -33,6 +23,16 @@ export default class Customer {
 
     get name(): string {
         return this._name;
+    }
+
+    validate() {
+        if (this._id.length === 0) {
+            throw new Error('Id is required');
+        }
+
+        if (this._name.length === 0) {
+            throw new Error('Name is required');
+        }
     }
 
     changeName(name: string): void {
