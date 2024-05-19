@@ -33,6 +33,13 @@ export default class Order {
     }
 
     calculateTotal(): void {
-        this._total = this._items.reduce((sum, item) => sum + item.price, 0);
+        let total = 0;
+
+        this._items.forEach(orderItem => {
+            orderItem.calculateTotal();
+            total += orderItem.total;
+        });
+
+        this._total = total;
     }
 }
