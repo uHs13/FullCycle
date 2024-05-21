@@ -5,6 +5,7 @@ export default class Order {
     private _customerId: string;
     private _items: OrderItem[] = [];
     private _total: number = 0;
+    // private _rewardPointsCalculator: RewardPointsCalculator;
 
     constructor(id: string, customerId: string, items: OrderItem[]) {
         this._id = id;
