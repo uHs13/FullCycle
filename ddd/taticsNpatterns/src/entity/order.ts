@@ -1,3 +1,4 @@
+import RewardPointsCalculator from "../calculator/rewardPointsCalculator";
 import OrderItem from "./orderItem";
 
 export default class Order {
@@ -5,7 +6,8 @@ export default class Order {
     private _customerId: string;
     private _items: OrderItem[] = [];
     private _total: number = 0;
-    // private _rewardPointsCalculator: RewardPointsCalculator;
+    private _rewardPointsCalculator!: RewardPointsCalculator;
+    private _rewardPoints: number = 0;
 
     constructor(id: string, customerId: string, items: OrderItem[]) {
         this._id = id;
@@ -15,8 +17,16 @@ export default class Order {
         this.validate();
     }
 
+    set rewardPointsCalculator(rewardPointsCalculator: RewardPointsCalculator) {
+        this._rewardPointsCalculator = rewardPointsCalculator;
+    }
+
     get total(): number {
         return this._total;
+    }
+
+    get rewardPoints(): number {
+        return this._rewardPoints;
     }
 
     validate(): void {
@@ -42,5 +52,16 @@ export default class Order {
         });
 
         this._total = total;
+    }
+
+    calculateRewardPoints(): void {
+        if (this._total === 0) {
+            this._rewardPoints = 0;
+        }
+
+        this._rewardPointsCalculator.originAmount = this._total;
+        this._rewardPointsCalculator.calculate();
+
+        this._rewardPoints = this._rewardPointsCalculator.total;
     }
 }

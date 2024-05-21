@@ -1,19 +1,22 @@
 export default class RewardPointsCalculator {
-    private _originAmount: number;
+    private _originAmount: number = 0;
     private _pointsDivider: number;
     private _rewardByDivider: number;
     private _total: number = 0;
 
-    constructor(
-        originAmount: number,
-        pointsDivider: number,
-        rewardByDivider: number
-    ) {
-        this._originAmount = originAmount;
+    constructor(pointsDivider: number, rewardByDivider: number) {
         this._pointsDivider = pointsDivider;
         this._rewardByDivider = rewardByDivider;
 
         this.validate();
+    }
+
+    set originAmount(originAmount: number) {
+        if (originAmount <= 0) {
+            throw new Error('The origin amount must be at least one');
+        }
+
+        this._originAmount = originAmount;
     }
 
     get total(): number {
@@ -21,10 +24,6 @@ export default class RewardPointsCalculator {
     }
 
     validate(): void {
-        if (this._originAmount <= 0) {
-            throw new Error('The origin amount must be at least one');
-        }
-
         if (this._pointsDivider < 1) {
             throw new Error('The points divider must be at least one');
         }

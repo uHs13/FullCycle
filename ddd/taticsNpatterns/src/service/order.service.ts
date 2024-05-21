@@ -11,4 +11,15 @@ export default class OrderService {
 
         return ordersTotal;
     }
+
+    static calculateRewardPoints(orders: Order[]): number {
+        let rewardPoints = 0;
+
+        orders.forEach(order => {
+            order.calculateRewardPoints();
+            rewardPoints += order.rewardPoints;
+        });
+
+        return rewardPoints;
+    }
 }
