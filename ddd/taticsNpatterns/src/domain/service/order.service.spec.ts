@@ -42,8 +42,8 @@ describe('Order service unit tests', () => {
         orderTwo.rewardPointsCalculator = rewardPointsCalculator;
 
         OrderService.calculateTotal([orderOne, orderTwo]);
-        let rewawrdPoints = OrderService.calculateRewardPoints([orderOne, orderTwo]);
+        let rewardPoints = OrderService.calculateRewardPoints([orderOne, orderTwo]);
 
-        expect(rewawrdPoints).toBe(75);
+        expect(rewardPoints).toBe(75);
     });
 });
