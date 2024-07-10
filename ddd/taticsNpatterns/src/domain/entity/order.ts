@@ -17,6 +17,10 @@ export default class Order {
         this.validate();
     }
 
+    get id(): string {
+        return this._id;
+    }
+
     set rewardPointsCalculator(rewardPointsCalculator: RewardPointsCalculator) {
         this._rewardPointsCalculator = rewardPointsCalculator;
     }
