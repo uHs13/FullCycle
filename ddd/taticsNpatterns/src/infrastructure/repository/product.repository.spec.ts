@@ -14,7 +14,7 @@ describe('Product repository test', () => {
             sync: {force: true},
         });
 
-        sequelize.addModels([ProductModel]);
+        await sequelize.addModels([ProductModel]);
 
         await sequelize.sync();
     });

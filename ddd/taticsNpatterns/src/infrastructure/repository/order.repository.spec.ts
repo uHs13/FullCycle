@@ -8,7 +8,11 @@ import ProductRepository from "./product.repository";
 import Product from "../../domain/entity/product";
 import OrderItem from "../../domain/entity/orderItem";
 import Order from "../../domain/entity/order";
+import OrderRepository from "./order.repository";
+import RewardPointsCalculator from "../../domain/calculator/rewardPointsCalculator";
 import OrderModel from "../db/sequelize/model/order.model";
+import OrderItemModel from "../db/sequelize/model/orderItem.model";
+import ProductModel from "../db/sequelize/model/product.model";
 
 describe('Order repository test', () => {
     let sequelize: Sequelize;
@@ -21,7 +25,7 @@ describe('Order repository test', () => {
             sync: {force: true},
         });
 
-        sequelize.addModels([CustomerModel]);
+        await sequelize.addModels([CustomerModel, OrderModel, OrderItemModel, ProductModel]);
 
         await sequelize.sync();
     });
@@ -57,6 +61,7 @@ describe('Order repository test', () => {
 
         const orderItemUuid = 'uuid';
         const productQuantity = 13;
+        const orderUuid = 'uuid';
 
         const orderItem = new OrderItem(
             orderItemUuid,
@@ -65,7 +70,7 @@ describe('Order repository test', () => {
             product.price
         );
 
-        const orderUuid = 'uuid';
+        orderItem.orderId = orderUuid;
 
         const order = new Order(
             orderUuid,
@@ -73,7 +78,10 @@ describe('Order repository test', () => {
             [orderItem]
         );
 
+        order.rewardPointsCalculator = new RewardPointsCalculator(1, 1);
+
         order.calculateTotal();
+        order.calculateRewardPoints();
 
         const orderRepository = new OrderRepository();
         await orderRepository.create(order);
@@ -87,6 +95,7 @@ describe('Order repository test', () => {
             id: order.id,
             customerId: customer.id,
             total: order.total,
+            rewardPoints: 169,
             items: [
                 {
                     id: orderItem.id,

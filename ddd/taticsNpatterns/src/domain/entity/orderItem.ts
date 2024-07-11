@@ -4,6 +4,7 @@ export default class OrderItem {
     private _productQuantity: number;
     private _productSalePrice: number;
     private _total: number = 0;
+    private _orderId: string;
 
     constructor(
         id: string,
@@ -23,6 +24,10 @@ export default class OrderItem {
         return this._id;
     }
 
+    get productId(): string {
+        return this._id;
+    }
+
     get productQuantity(): number {
         return this._productQuantity;
     }
@@ -33,6 +38,14 @@ export default class OrderItem {
 
     get total(): number {
         return this._total;
+    }
+
+    set orderId(orderId: string) {
+        this._orderId = orderId;
+    }
+
+    get orderId(): string {
+        return this._orderId;
     }
 
     validate(): void {

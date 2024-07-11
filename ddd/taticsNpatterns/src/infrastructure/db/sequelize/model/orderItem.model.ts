@@ -6,7 +6,7 @@ import OrderModel from "./order.model";
     tableName: 'order_items',
     timestamps: false
 })
-export default class OrderItemModel extends Model{
+export default class OrderItemModel extends Model {
     @PrimaryKey
     @Column
     declare id: string;
@@ -26,8 +26,8 @@ export default class OrderItemModel extends Model{
 
     @ForeignKey(() => OrderModel)
     @Column({allowNull: false})
-    declare orderId: string
+    declare orderId: string;
 
     @BelongsTo(() => OrderModel)
-    declare order: OrderModel;
+    declare order: ProductModel;
 }
