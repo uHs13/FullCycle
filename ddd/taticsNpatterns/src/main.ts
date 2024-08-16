@@ -1,8 +1,8 @@
-import Address from "./domain/entity/address";
-import Customer from "./domain/entity/customer";
-import Order from "./domain/entity/order";
-import OrderItem from "./domain/entity/orderItem";
-import Product from "./domain/entity/product";
+import Address from "./domain/customer/valueObject/address";
+import Customer from "./domain/customer/entity/customer";
+import Product from "./domain/product/entity/product";
+import OrderItem from "./domain/checkout/entity/orderItem";
+import Order from "./domain/checkout/entity/order";
 
 const address = new Address('Groove Street', 485, '123456', 'LS');
 
