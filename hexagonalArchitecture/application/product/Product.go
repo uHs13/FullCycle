@@ -1,8 +1,11 @@
 package application
 
+import "errors"
+
 const (
-	Disabled = "disabled"
-	Enabled  = "enabled"
+	DisabledStatusConst     = "disabled"
+	EnabledStatusConst      = "enabled"
+	EnableErrorMessageConst = "the product cannot be enabled with the price lower than zero"
 )
 
 type Product struct {
@@ -17,6 +20,12 @@ func (product *Product) IsValid() (bool, error) {
 }
 
 func (product *Product) Enable() error {
+	if product.Price < 0 {
+		return errors.New(EnableErrorMessageConst)
+	}
+
+	product.Status = EnabledStatusConst
+
 	return nil
 }
 
@@ -25,17 +34,17 @@ func (product *Product) Disable() error {
 }
 
 func (product *Product) GetId() string {
-	return ""
+	return product.Id
 }
 
 func (product *Product) GetName() string {
-	return ""
+	return product.Name
 }
 
 func (product *Product) GetStatus() string {
-	return ""
+	return product.Status
 }
 
 func (product *Product) GetPrice() float32 {
-	return 0
+	return product.Price
 }
