@@ -26,14 +26,13 @@ type Product struct {
 }
 
 func NewProduct(
-	id string,
 	name string,
 	price float32,
 ) (*Product, error) {
 	newProduct := Product{
-		Id:     id,
+		Id:     uuid.NewString(),
 		Name:   name,
-		Status: DisableErrorMessageConst,
+		Status: DisabledStatusConst,
 		Price:  price,
 	}
 
