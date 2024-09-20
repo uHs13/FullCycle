@@ -73,18 +73,33 @@ func (m *MockProductWriterInterface) EXPECT() *MockProductWriterInterfaceMockRec
 }
 
 // Create mocks base method.
-func (m *MockProductWriterInterface) Create(id string, price float32) (application_interface.ProductInterface, error) {
+func (m *MockProductWriterInterface) Create(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", id, price)
+	ret := m.ctrl.Call(m, "Create", product)
 	ret0, _ := ret[0].(application_interface.ProductInterface)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockProductWriterInterfaceMockRecorder) Create(id, price interface{}) *gomock.Call {
+func (mr *MockProductWriterInterfaceMockRecorder) Create(product interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockProductWriterInterface)(nil).Create), id, price)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockProductWriterInterface)(nil).Create), product)
+}
+
+// Update mocks base method.
+func (m *MockProductWriterInterface) Update(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", product)
+	ret0, _ := ret[0].(application_interface.ProductInterface)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockProductWriterInterfaceMockRecorder) Update(product interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockProductWriterInterface)(nil).Update), product)
 }
 
 // MockProductPersistenceInterface is a mock of ProductPersistenceInterface interface.
@@ -111,18 +126,18 @@ func (m *MockProductPersistenceInterface) EXPECT() *MockProductPersistenceInterf
 }
 
 // Create mocks base method.
-func (m *MockProductPersistenceInterface) Create(id string, price float32) (application_interface.ProductInterface, error) {
+func (m *MockProductPersistenceInterface) Create(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", id, price)
+	ret := m.ctrl.Call(m, "Create", product)
 	ret0, _ := ret[0].(application_interface.ProductInterface)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockProductPersistenceInterfaceMockRecorder) Create(id, price interface{}) *gomock.Call {
+func (mr *MockProductPersistenceInterfaceMockRecorder) Create(product interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockProductPersistenceInterface)(nil).Create), id, price)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockProductPersistenceInterface)(nil).Create), product)
 }
 
 // Disable mocks base method.
@@ -168,4 +183,19 @@ func (m *MockProductPersistenceInterface) Get(id string) (application_interface.
 func (mr *MockProductPersistenceInterfaceMockRecorder) Get(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockProductPersistenceInterface)(nil).Get), id)
+}
+
+// Update mocks base method.
+func (m *MockProductPersistenceInterface) Update(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", product)
+	ret0, _ := ret[0].(application_interface.ProductInterface)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockProductPersistenceInterfaceMockRecorder) Update(product interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockProductPersistenceInterface)(nil).Update), product)
 }

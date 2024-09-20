@@ -13,8 +13,16 @@ type ProductDatabase struct {
 }
 
 const (
-	getProductQuery = "SELECT id, name, price, status FROM product WHERE id = ?"
+	getProductQuery    = "SELECT id, name, price, status FROM product WHERE id = ?"
+	createProductQuery = "INSERT INTO product(id, name, price, status) VALUES (?, ?, ?, ?)"
+	updateProductQuery = "UPDATE product SET name = ?, price = ? WHERE id = ?"
 )
+
+func NewProductDatabase(database *sql.DB) *ProductDatabase {
+	return &ProductDatabase{
+		db: database,
+	}
+}
 
 func (productDatabase *ProductDatabase) Get(id string) (application_interface.ProductInterface, error) {
 	var product application.Product
@@ -32,9 +40,56 @@ func (productDatabase *ProductDatabase) Get(id string) (application_interface.Pr
 		&product.Status,
 	)
 
+	defer statement.Close()
+
 	if err != nil {
 		return nil, err
 	}
 
 	return &product, nil
+}
+
+func (productDatabase *ProductDatabase) Create(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+	statement, err := productDatabase.db.Prepare(createProductQuery)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = statement.Exec(
+		product.GetId(),
+		product.GetName(),
+		product.GetPrice(),
+		product.GetStatus(),
+	)
+
+	defer statement.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (productDatabase *ProductDatabase) Update(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+	statement, err := productDatabase.db.Prepare(updateProductQuery)
+
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = statement.Exec(
+		product.GetName(),
+		product.GetPrice(),
+		product.GetId(),
+	)
+
+	defer statement.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
 }

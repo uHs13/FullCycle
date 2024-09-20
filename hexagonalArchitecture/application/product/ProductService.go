@@ -25,7 +25,23 @@ func (productService *ProductService) Create(name string, price float32) (applic
 		return &Product{}, err
 	}
 
-	result, err := productService.Persistence.Create(product.GetName(), product.Price)
+	result, err := productService.Persistence.Create(product)
+
+	if err != nil {
+		return &Product{}, err
+	}
+
+	return result, nil
+}
+
+func (productService *ProductService) Update(name string, price float32) (application_interface.ProductInterface, error) {
+	product, err := NewProduct(name, price)
+
+	if err != nil {
+		return &Product{}, err
+	}
+
+	result, err := productService.Persistence.Update(product)
 
 	if err != nil {
 		return &Product{}, err

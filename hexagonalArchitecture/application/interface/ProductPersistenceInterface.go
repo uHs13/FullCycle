@@ -5,7 +5,8 @@ type ProductReaderInterface interface {
 }
 
 type ProductWriterInterface interface {
-	Create(id string, price float32) (ProductInterface, error)
+	Create(product ProductInterface) (ProductInterface, error)
+	Update(product ProductInterface) (ProductInterface, error)
 }
 
 type ProductPersistenceInterface interface {

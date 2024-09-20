@@ -1,0 +1,1 @@
+mockgen -destination=application/mocks/ProductPersistenceMock.go -source=application/interface/ProductPersistenceInterface.go application

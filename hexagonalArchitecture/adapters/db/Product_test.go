@@ -2,10 +2,23 @@ package db_test
 
 import (
 	"database/sql"
+	"goHexagonal/adapters/db"
+	application "goHexagonal/application/product"
 	"log"
+	"testing"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
 )
 
 var Db *sql.DB
+
+const (
+	validId     = "uuid"
+	validName   = "T-shirt"
+	validPrice  = float32(13)
+	validStatus = "disabled"
+)
 
 func SetUp() {
 	OpenConnection()
@@ -30,7 +43,7 @@ func CreateTable() {
 }
 
 func CreateProduct() {
-	insert := `INSERT INTO product VALUES("uuid", "T-shirt", 13, "disabled");`
+	insert := `INSERT INTO product VALUES(?, ?, ?, ?);`
 
 	statement, err := Db.Prepare(insert)
 
@@ -38,5 +51,38 @@ func CreateProduct() {
 		log.Fatal(err.Error())
 	}
 
-	statement.Exec()
+	statement.Exec(validId, validName, validPrice, validStatus)
+}
+
+func TestShouldProperlyGetAProduct(t *testing.T) {
+	SetUp()
+
+	defer Db.Close()
+
+	productDatabase := db.NewProductDatabase(Db)
+
+	product, err := productDatabase.Get(validId)
+
+	require.Nil(t, err)
+	require.Equal(t, validId, product.GetId())
+	require.Equal(t, validName, product.GetName())
+	require.Equal(t, validPrice, product.GetPrice())
+	require.Equal(t, validStatus, product.GetStatus())
+}
+
+func TestShouldProperlyCreateAProduct(t *testing.T) {
+	SetUp()
+
+	defer Db.Close()
+
+	productDatabase := db.NewProductDatabase(Db)
+	product, err := application.NewProduct(uuid.NewString(), float32(15))
+
+	product, err = productDatabase.Create(product)
+
+	require.Nil(t, err)
+	require.Equal(t, validId, product.GetId())
+	require.Equal(t, validName, product.GetName())
+	require.Equal(t, validPrice, product.GetPrice())
+	require.Equal(t, validStatus, product.GetStatus())
 }

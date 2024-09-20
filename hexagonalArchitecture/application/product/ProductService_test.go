@@ -35,13 +35,32 @@ func TestShouldProperlyCreateAnProduct(t *testing.T) {
 	product := mock_application_interface.NewMockProductInterface(controller)
 	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
 
-	persistence.EXPECT().Create(gomock.Any(), gomock.Any()).Return(product, nil).AnyTimes()
+	persistence.EXPECT().Create(gomock.Any()).Return(product, nil).AnyTimes()
 
 	service := application.ProductService{
 		Persistence: persistence,
 	}
 
 	result, err := service.Create("name", 13)
+
+	require.Nil(t, err)
+	require.Equal(t, product, result)
+}
+
+func TestShouldProperlyUpdateAnProduct(t *testing.T) {
+	controller := gomock.NewController(t)
+	defer controller.Finish()
+
+	product := mock_application_interface.NewMockProductInterface(controller)
+	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
+
+	persistence.EXPECT().Update(gomock.Any()).Return(product, nil).AnyTimes()
+
+	service := application.ProductService{
+		Persistence: persistence,
+	}
+
+	result, err := service.Update("newName", 13)
 
 	require.Nil(t, err)
 	require.Equal(t, product, result)
