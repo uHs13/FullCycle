@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"goHexagonal/adapters/db"
 	application "goHexagonal/application/product"
+	"goHexagonal/infra/database"
 	"log"
 	"testing"
 
@@ -26,7 +27,13 @@ func SetUp() {
 }
 
 func OpenConnection() {
-	Db, _ = sql.Open("sqlite3", ":memory:")
+	sqlite3, err := database.NewDatabase(database.SqliteConnectionConst)
+
+	Db = sqlite3.GetConnection()
+
+	if err != nil {
+		panic(err)
+	}
 }
 
 func CreateTable() {

@@ -60,7 +60,7 @@ func TestShouldProperlyUpdateAnProduct(t *testing.T) {
 		Persistence: persistence,
 	}
 
-	result, err := service.Update("newName", 13)
+	result, err := service.Update(product)
 
 	require.Nil(t, err)
 	require.Equal(t, product, result)
