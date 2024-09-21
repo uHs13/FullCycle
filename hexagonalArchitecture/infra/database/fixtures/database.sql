@@ -4,4 +4,4 @@ CREATE TABLE product (
     price FLOAT(10, 2) NOT NULL,
     status ENUM('enabled', 'disabled') NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)
+);

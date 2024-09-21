@@ -11,11 +11,13 @@ func main() {
 		panic(err)
 	}
 
-	db, err := database.NewDatabase(database.MysqlConnectionConst)
+	database, err := database.NewDatabase(database.MysqlConnectionConst)
 
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println(database)
 
 	fmt.Println("Hello World")
 }

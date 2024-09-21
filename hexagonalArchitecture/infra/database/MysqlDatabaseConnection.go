@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
@@ -19,23 +21,32 @@ type MysqlDatabaseConnection struct {
 	connection *sql.DB
 }
 
-func NewMysqlDatabaseConnection() *MysqlDatabaseConnection {
+func NewMysqlDatabaseConnection() (*MysqlDatabaseConnection, error) {
 	connection := &MysqlDatabaseConnection{}
-	connection.OpenConnection()
 
-	return connection
+	err := connection.OpenConnection()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return connection, nil
 }
 
 func (mysqlDatabaseConnection *MysqlDatabaseConnection) OpenConnection() error {
 	connectionString := mysqlDatabaseConnection.createConnectionString()
 
-	connection, err := sql.Open(mysqlDriverName, connectionString)
+	mysql, err := sql.Open(mysqlDriverName, connectionString)
 
 	if err != nil {
 		return err
 	}
 
-	mysqlDatabaseConnection.connection = connection
+	if err = mysql.Ping(); err != nil {
+		return err
+	}
+
+	mysqlDatabaseConnection.connection = mysql
 
 	return nil
 }

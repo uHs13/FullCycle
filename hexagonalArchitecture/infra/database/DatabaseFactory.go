@@ -17,11 +17,23 @@ func NewDatabaseFactory(connectionType string) *DatabaseFactory {
 
 func (databaseFactory *DatabaseFactory) MakeInstance() (application.DatabaseConnectionInterface, error) {
 	if databaseFactory.ConnectionType == MysqlConnectionConst {
-		return NewMysqlDatabaseConnection(), nil
+		connection, err := NewMysqlDatabaseConnection()
+
+		if err != nil {
+			return nil, err
+		}
+
+		return connection, nil
 	}
 
 	if databaseFactory.ConnectionType == SqliteConnectionConst {
-		return NewSqliteDatabaseConnection(), nil
+		connection, err := NewSqliteDatabaseConnection()
+
+		if err != nil {
+			return nil, err
+		}
+
+		return connection, nil
 	}
 
 	return nil, errors.New(InvalidConnectionConst)

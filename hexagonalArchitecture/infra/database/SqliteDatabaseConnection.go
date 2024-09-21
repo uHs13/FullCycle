@@ -1,6 +1,10 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+
+	_ "github.com/mattn/go-sqlite3"
+)
 
 const (
 	sqliteDriverName     = "sqlite3"
@@ -11,11 +15,16 @@ type SqliteDatabaseConnection struct {
 	connection *sql.DB
 }
 
-func NewSqliteDatabaseConnection() *SqliteDatabaseConnection {
+func NewSqliteDatabaseConnection() (*SqliteDatabaseConnection, error) {
 	connection := &SqliteDatabaseConnection{}
-	connection.OpenConnection()
 
-	return connection
+	err := connection.OpenConnection()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return connection, nil
 }
 
 func (sqliteDatabaseConnection *SqliteDatabaseConnection) OpenConnection() error {
