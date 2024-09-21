@@ -7,7 +7,6 @@ import (
 	"log"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -76,12 +75,31 @@ func TestShouldProperlyCreateAProduct(t *testing.T) {
 	defer Db.Close()
 
 	productDatabase := db.NewProductDatabase(Db)
-	product, err := application.NewProduct(uuid.NewString(), float32(15))
-
-	product, err = productDatabase.Create(product)
+	newProduct, err := application.NewProduct(validName, validPrice)
 
 	require.Nil(t, err)
-	require.Equal(t, validId, product.GetId())
+
+	product, err := productDatabase.Create(newProduct)
+
+	require.Nil(t, err)
+	require.Equal(t, validName, product.GetName())
+	require.Equal(t, validPrice, product.GetPrice())
+	require.Equal(t, validStatus, product.GetStatus())
+}
+
+func TestShouldProperlyEditAProduct(t *testing.T) {
+	SetUp()
+
+	defer Db.Close()
+
+	productDatabase := db.NewProductDatabase(Db)
+	newProduct, err := application.NewProduct(validName, validPrice)
+
+	require.Nil(t, err)
+
+	product, err := productDatabase.Update(newProduct)
+
+	require.Nil(t, err)
 	require.Equal(t, validName, product.GetName())
 	require.Equal(t, validPrice, product.GetPrice())
 	require.Equal(t, validStatus, product.GetStatus())
