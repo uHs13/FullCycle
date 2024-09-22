@@ -2,7 +2,7 @@ package db_test
 
 import (
 	"database/sql"
-	"goHexagonal/adapters/db"
+	"goHexagonal/adapters/driven/db"
 	application "goHexagonal/application/product"
 	"goHexagonal/infra/database"
 	"log"

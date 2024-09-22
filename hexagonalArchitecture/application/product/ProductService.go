@@ -43,6 +43,9 @@ func (productService *ProductService) Create(name string, price float32) (applic
 func (productService *ProductService) Update(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
 	result, err := productService.Get(product.GetId())
 
+	result.SetPrice(product.GetPrice())
+	result.SetName(product.GetName())
+
 	if err != nil {
 		return nil, err
 	}

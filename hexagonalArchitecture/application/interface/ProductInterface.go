@@ -5,6 +5,7 @@ type ProductInterface interface {
 	Enable() error
 	Disable() error
 	GetId() string
+	SetName(name string) error
 	GetName() string
 	GetStatus() string
 	SetPrice(price float32) error

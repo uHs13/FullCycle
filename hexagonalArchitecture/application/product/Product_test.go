@@ -88,6 +88,32 @@ func TestShouldThrowAnErrorWhenTryToCreateProductWithTooLongName(t *testing.T) {
 	require.Equal(t, application.NotValidNameErrorConst, err.Error())
 }
 
+func TestShouldThrowAnErrorWhenTryToSetProductNameWithEmptyValue(t *testing.T) {
+	product, err := application.NewProduct(
+		"name",
+		13,
+	)
+
+	require.Nil(t, err)
+
+	err = product.SetName("")
+
+	require.Equal(t, application.NotValidNameErrorConst, err.Error())
+}
+
+func TestShouldThrowAnErrorWhenTryToSetProductNameWithTooLongValue(t *testing.T) {
+	product, err := application.NewProduct(
+		"name",
+		13,
+	)
+
+	require.Nil(t, err)
+
+	err = product.SetName("Mussum Ipsum, cacilds vidis litro abertis. Suco de cevadiss, é um leite divinis, qui tem lupuliz, matis, aguis e fermentis. Admodum accumsan disputationi eu sit. Vide electram sadipscing et per. Tá deprimidis, eu conheço uma cachacis que pode alegrar sua vidis. Mais vale um bebadis conhecidiss, que um alcoolatra anonimis.")
+
+	require.Equal(t, application.NotValidNameErrorConst, err.Error())
+}
+
 func TestShouldThrowAnErrorWhenTryToCreateProductWithNotValidPrice(t *testing.T) {
 	_, err := application.NewProduct(
 		"T-shirt",

@@ -35,18 +35,18 @@ func (m *MockProductServiceInterface) EXPECT() *MockProductServiceInterfaceMockR
 }
 
 // Create mocks base method.
-func (m *MockProductServiceInterface) Create(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+func (m *MockProductServiceInterface) Create(name string, price float32) (application_interface.ProductInterface, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", product)
+	ret := m.ctrl.Call(m, "Create", name, price)
 	ret0, _ := ret[0].(application_interface.ProductInterface)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockProductServiceInterfaceMockRecorder) Create(product interface{}) *gomock.Call {
+func (mr *MockProductServiceInterfaceMockRecorder) Create(name, price interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockProductServiceInterface)(nil).Create), product)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockProductServiceInterface)(nil).Create), name, price)
 }
 
 // Disable mocks base method.

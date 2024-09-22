@@ -123,6 +123,18 @@ func (product *Product) GetId() string {
 	return product.Id
 }
 
+func (product *Product) SetName(name string) error {
+	product.Name = name
+
+	_, err := product.IsValid()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (product *Product) GetName() string {
 	return product.Name
 }
