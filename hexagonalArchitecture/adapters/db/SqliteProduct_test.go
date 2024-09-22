@@ -111,3 +111,39 @@ func TestShouldProperlyEditAProductWithSqliteConnection(t *testing.T) {
 	require.Equal(t, SqliteValidPrice, product.GetPrice())
 	require.Equal(t, SqliteValidStatus, product.GetStatus())
 }
+
+func TestShouldProperlyEnableAProductWithSqliteConnection(t *testing.T) {
+	SqliteSetUp()
+
+	defer SqliteDb.Close()
+
+	productDatabase := db.NewProductDatabase(SqliteDb)
+	newProduct, err := application.NewProduct(SqliteValidName, SqliteValidPrice)
+
+	require.Nil(t, err)
+
+	product, err := productDatabase.Enable(newProduct)
+
+	require.Nil(t, err)
+	require.Equal(t, SqliteValidName, product.GetName())
+	require.Equal(t, SqliteValidPrice, product.GetPrice())
+	require.Equal(t, SqliteValidStatus, product.GetStatus())
+}
+
+func TestShouldProperlyDisableAProductWithSqliteConnection(t *testing.T) {
+	SqliteSetUp()
+
+	defer SqliteDb.Close()
+
+	productDatabase := db.NewProductDatabase(SqliteDb)
+	newProduct, err := application.NewProduct(SqliteValidName, SqliteValidPrice)
+
+	require.Nil(t, err)
+
+	product, err := productDatabase.Disable(newProduct)
+
+	require.Nil(t, err)
+	require.Equal(t, SqliteValidName, product.GetName())
+	require.Equal(t, SqliteValidPrice, product.GetPrice())
+	require.Equal(t, SqliteValidStatus, product.GetStatus())
+}

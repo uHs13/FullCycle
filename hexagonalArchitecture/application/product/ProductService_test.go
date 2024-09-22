@@ -71,9 +71,11 @@ func TestShouldProperlyEnableAnProduct(t *testing.T) {
 	defer controller.Finish()
 
 	product := mock_application_interface.NewMockProductInterface(controller)
+	product.EXPECT().GetId().Return(gomock.Any().String()).AnyTimes()
 	product.EXPECT().Enable().Return(nil)
-	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
 
+	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
+	persistence.EXPECT().Get(gomock.Any()).Return(product, nil).AnyTimes()
 	persistence.EXPECT().Enable(gomock.Any()).Return(product, nil).AnyTimes()
 
 	service := application.ProductService{
@@ -91,9 +93,11 @@ func TestShouldProperlyDisableAnProduct(t *testing.T) {
 	defer controller.Finish()
 
 	product := mock_application_interface.NewMockProductInterface(controller)
+	product.EXPECT().GetId().Return(gomock.Any().String()).AnyTimes()
 	product.EXPECT().Disable().Return(nil)
-	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
 
+	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
+	persistence.EXPECT().Get(gomock.Any()).Return(product, nil).AnyTimes()
 	persistence.EXPECT().Disable(gomock.Any()).Return(product, nil).AnyTimes()
 
 	service := application.ProductService{

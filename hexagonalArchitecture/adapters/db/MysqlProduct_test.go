@@ -22,12 +22,12 @@ const (
 )
 
 func SetUp() {
-	OpenConnection()
-	CreateTable()
-	CreateProduct()
+	MysqlOpenConnection()
+	MysqlCreateTable()
+	MysqlCreateProduct()
 }
 
-func OpenConnection() {
+func MysqlOpenConnection() {
 	if err := dotEnv.Load(); err != nil {
 		panic(err)
 	}
@@ -41,15 +41,16 @@ func OpenConnection() {
 	Db = mysql.GetConnection()
 }
 
-func CreateTable() {
+func MysqlCreateTable() {
 	table := `
-		CREATE TABLE product (
+		CREATE TABLE IF NOT EXISTS product (
 			id VARCHAR(36) NOT NULL,
 			name VARCHAR(255) NOT NULL,
 			price FLOAT(10, 2) NOT NULL,
 			status ENUM('enabled', 'disabled') NOT NULL,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 		);
+
 	`
 
 	statement, err := Db.Prepare(table)
@@ -61,7 +62,7 @@ func CreateTable() {
 	statement.Exec()
 }
 
-func CreateProduct() {
+func MysqlCreateProduct() {
 	insert := `INSERT INTO product(id, name, price, status) VALUES(?, ?, ?, ?);`
 
 	statement, err := Db.Prepare(insert)
@@ -118,6 +119,42 @@ func TestShouldProperlyEditAProductWithMysqlConnection(t *testing.T) {
 	require.Nil(t, err)
 
 	product, err := productDatabase.Update(newProduct)
+
+	require.Nil(t, err)
+	require.Equal(t, validName, product.GetName())
+	require.Equal(t, validPrice, product.GetPrice())
+	require.Equal(t, validStatus, product.GetStatus())
+}
+
+func TestShouldProperlyEnableAProductWithMysqlConnection(t *testing.T) {
+	SetUp()
+
+	defer Db.Close()
+
+	productDatabase := db.NewProductDatabase(Db)
+	newProduct, err := application.NewProduct(validName, validPrice)
+
+	require.Nil(t, err)
+
+	product, err := productDatabase.Enable(newProduct)
+
+	require.Nil(t, err)
+	require.Equal(t, validName, product.GetName())
+	require.Equal(t, validPrice, product.GetPrice())
+	require.Equal(t, validStatus, product.GetStatus())
+}
+
+func TestShouldProperlyDisableAProductWithMysqlConnection(t *testing.T) {
+	SetUp()
+
+	defer Db.Close()
+
+	productDatabase := db.NewProductDatabase(Db)
+	newProduct, err := application.NewProduct(validName, validPrice)
+
+	require.Nil(t, err)
+
+	product, err := productDatabase.Disable(newProduct)
 
 	require.Nil(t, err)
 	require.Equal(t, validName, product.GetName())

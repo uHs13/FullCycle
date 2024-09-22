@@ -1,4 +1,4 @@
-CREATE TABLE product (
+CREATE TABLE IF NOT EXISTS product (
     id VARCHAR(36) NOT NULL,
     name VARCHAR(255) NOT NULL,
     price FLOAT(10, 2) NOT NULL,

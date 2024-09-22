@@ -13,9 +13,10 @@ type ProductDatabase struct {
 }
 
 const (
-	getProductQuery    = "SELECT id, name, price, status FROM product WHERE id = ?"
-	createProductQuery = "INSERT INTO product(id, name, price, status) VALUES (?, ?, ?, ?)"
-	updateProductQuery = "UPDATE product SET name = ?, price = ? WHERE id = ?"
+	getProductQuery          = "SELECT id, name, price, status FROM product WHERE id = ?"
+	createProductQuery       = "INSERT INTO product(id, name, price, status) VALUES (?, ?, ?, ?)"
+	updateProductQuery       = "UPDATE product SET name = ?, price = ? WHERE id = ?"
+	updateProductStatusQuery = "UPDATE product SET status = ? WHERE id = ?"
 )
 
 func NewProductDatabase(database *sql.DB) *ProductDatabase {
@@ -24,7 +25,9 @@ func NewProductDatabase(database *sql.DB) *ProductDatabase {
 	}
 }
 
-func (productDatabase *ProductDatabase) Get(id string) (application_interface.ProductInterface, error) {
+func (productDatabase *ProductDatabase) Get(
+	id string,
+) (application_interface.ProductInterface, error) {
 	var product application.Product
 
 	statement, err := productDatabase.db.Prepare(getProductQuery)
@@ -49,7 +52,9 @@ func (productDatabase *ProductDatabase) Get(id string) (application_interface.Pr
 	return &product, nil
 }
 
-func (productDatabase *ProductDatabase) Create(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+func (productDatabase *ProductDatabase) Create(
+	product application_interface.ProductInterface,
+) (application_interface.ProductInterface, error) {
 	statement, err := productDatabase.db.Prepare(createProductQuery)
 
 	if err != nil {
@@ -72,7 +77,9 @@ func (productDatabase *ProductDatabase) Create(product application_interface.Pro
 	return product, nil
 }
 
-func (productDatabase *ProductDatabase) Update(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
+func (productDatabase *ProductDatabase) Update(
+	product application_interface.ProductInterface,
+) (application_interface.ProductInterface, error) {
 	statement, err := productDatabase.db.Prepare(updateProductQuery)
 
 	if err != nil {
@@ -92,4 +99,50 @@ func (productDatabase *ProductDatabase) Update(product application_interface.Pro
 	}
 
 	return product, nil
+}
+
+func (productDatabase *ProductDatabase) Enable(
+	product application_interface.ProductInterface,
+) (application_interface.ProductInterface, error) {
+	err := productDatabase.UpdateStatus(product.GetId(), application.EnabledStatusConst)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (productDatabase *ProductDatabase) Disable(
+	product application_interface.ProductInterface,
+) (application_interface.ProductInterface, error) {
+	err := productDatabase.UpdateStatus(product.GetId(), application.DisabledStatusConst)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}
+
+func (productDatabase *ProductDatabase) UpdateStatus(
+	productId string,
+	productStatus string,
+) error {
+	statement, err := productDatabase.db.Prepare(updateProductStatusQuery)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = statement.Exec(
+		productStatus,
+		productId,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

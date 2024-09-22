@@ -51,13 +51,19 @@ func (productService *ProductService) Update(product application_interface.Produ
 }
 
 func (productService *ProductService) Enable(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
-	err := product.Enable()
+	result, err := productService.Get(product.GetId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = result.Enable()
 
 	if err != nil {
 		return &Product{}, err
 	}
 
-	result, err := productService.Persistence.Enable(product)
+	result, err = productService.Persistence.Enable(product)
 
 	if err != nil {
 		return &Product{}, err
@@ -67,13 +73,19 @@ func (productService *ProductService) Enable(product application_interface.Produ
 }
 
 func (productService *ProductService) Disable(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
-	err := product.Disable()
+	result, err := productService.Get(product.GetId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = result.Disable()
 
 	if err != nil {
 		return &Product{}, err
 	}
 
-	result, err := productService.Persistence.Disable(product)
+	result, err = productService.Persistence.Disable(product)
 
 	if err != nil {
 		return &Product{}, err
