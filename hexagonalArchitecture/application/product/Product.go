@@ -131,6 +131,18 @@ func (product *Product) GetStatus() string {
 	return product.Status
 }
 
+func (product *Product) SetPrice(price float32) error {
+	product.Price = price
+
+	_, err := product.IsValid()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (product *Product) GetPrice() float32 {
 	return product.Price
 }

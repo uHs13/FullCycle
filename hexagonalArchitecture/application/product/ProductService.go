@@ -41,7 +41,13 @@ func (productService *ProductService) Create(name string, price float32) (applic
 }
 
 func (productService *ProductService) Update(product application_interface.ProductInterface) (application_interface.ProductInterface, error) {
-	result, err := productService.Persistence.Update(product)
+	result, err := productService.Get(product.GetId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	result, err = productService.Persistence.Update(result)
 
 	if err != nil {
 		return &Product{}, err
@@ -63,7 +69,7 @@ func (productService *ProductService) Enable(product application_interface.Produ
 		return &Product{}, err
 	}
 
-	result, err = productService.Persistence.Enable(product)
+	result, err = productService.Persistence.Enable(result)
 
 	if err != nil {
 		return &Product{}, err
@@ -85,7 +91,7 @@ func (productService *ProductService) Disable(product application_interface.Prod
 		return &Product{}, err
 	}
 
-	result, err = productService.Persistence.Disable(product)
+	result, err = productService.Persistence.Disable(result)
 
 	if err != nil {
 		return &Product{}, err

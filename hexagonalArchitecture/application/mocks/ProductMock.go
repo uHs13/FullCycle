@@ -131,3 +131,17 @@ func (mr *MockProductInterfaceMockRecorder) IsValid() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsValid", reflect.TypeOf((*MockProductInterface)(nil).IsValid))
 }
+
+// SetPrice mocks base method.
+func (m *MockProductInterface) SetPrice(price float32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetPrice", price)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetPrice indicates an expected call of SetPrice.
+func (mr *MockProductInterfaceMockRecorder) SetPrice(price interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPrice", reflect.TypeOf((*MockProductInterface)(nil).SetPrice), price)
+}

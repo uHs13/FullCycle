@@ -7,5 +7,6 @@ type ProductInterface interface {
 	GetId() string
 	GetName() string
 	GetStatus() string
+	SetPrice(price float32) error
 	GetPrice() float32
 }

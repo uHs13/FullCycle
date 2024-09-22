@@ -12,16 +12,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var Db *sql.DB
+var MysqlDb *sql.DB
 
 const (
-	validId     = "uuid"
-	validName   = "T-shirt"
-	validPrice  = float32(13)
-	validStatus = "disabled"
+	MysqlValidId     = "uuid"
+	MysqlValidName   = "T-shirt"
+	MysqlValidPrice  = float32(13)
+	MysqlValidStatus = "disabled"
 )
 
-func SetUp() {
+func MysqlSetUp() {
 	MysqlOpenConnection()
 	MysqlCreateTable()
 	MysqlCreateProduct()
@@ -38,7 +38,7 @@ func MysqlOpenConnection() {
 		panic(err)
 	}
 
-	Db = mysql.GetConnection()
+	MysqlDb = mysql.GetConnection()
 }
 
 func MysqlCreateTable() {
@@ -53,7 +53,7 @@ func MysqlCreateTable() {
 
 	`
 
-	statement, err := Db.Prepare(table)
+	statement, err := MysqlDb.Prepare(table)
 
 	if err != nil {
 		log.Fatal(err.Error())
@@ -65,99 +65,98 @@ func MysqlCreateTable() {
 func MysqlCreateProduct() {
 	insert := `INSERT INTO product(id, name, price, status) VALUES(?, ?, ?, ?);`
 
-	statement, err := Db.Prepare(insert)
+	statement, err := MysqlDb.Prepare(insert)
 
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	statement.Exec(validId, validName, validPrice, validStatus)
+	statement.Exec(MysqlValidId, MysqlValidName, MysqlValidPrice, MysqlValidStatus)
 }
 
 func TestShouldProperlyGetAProductWithMysqlConnection(t *testing.T) {
-	SetUp()
+	MysqlSetUp()
 
-	defer Db.Close()
+	defer MysqlDb.Close()
 
-	productDatabase := db.NewProductDatabase(Db)
+	productDatabase := db.NewProductDatabase(MysqlDb)
 
-	product, err := productDatabase.Get(validId)
+	product, err := productDatabase.Get(MysqlValidId)
 
 	require.Nil(t, err)
-	require.Equal(t, validId, product.GetId())
-	require.Equal(t, validName, product.GetName())
-	require.Equal(t, validPrice, product.GetPrice())
-	require.Equal(t, validStatus, product.GetStatus())
+	require.Equal(t, MysqlValidId, product.GetId())
+	require.Equal(t, MysqlValidName, product.GetName())
+	require.Equal(t, MysqlValidPrice, product.GetPrice())
 }
 
 func TestShouldProperlyCreateAProductWithMysqlConnection(t *testing.T) {
-	SetUp()
+	MysqlSetUp()
 
-	defer Db.Close()
+	defer MysqlDb.Close()
 
-	productDatabase := db.NewProductDatabase(Db)
-	newProduct, err := application.NewProduct(validName, validPrice)
+	productDatabase := db.NewProductDatabase(MysqlDb)
+	newProduct, err := application.NewProduct(MysqlValidName, MysqlValidPrice)
 
 	require.Nil(t, err)
 
 	product, err := productDatabase.Create(newProduct)
 
 	require.Nil(t, err)
-	require.Equal(t, validName, product.GetName())
-	require.Equal(t, validPrice, product.GetPrice())
-	require.Equal(t, validStatus, product.GetStatus())
+	require.Equal(t, MysqlValidName, product.GetName())
+	require.Equal(t, MysqlValidPrice, product.GetPrice())
+	require.Equal(t, MysqlValidStatus, product.GetStatus())
 }
 
 func TestShouldProperlyEditAProductWithMysqlConnection(t *testing.T) {
-	SetUp()
+	MysqlSetUp()
 
-	defer Db.Close()
+	defer MysqlDb.Close()
 
-	productDatabase := db.NewProductDatabase(Db)
-	newProduct, err := application.NewProduct(validName, validPrice)
+	productDatabase := db.NewProductDatabase(MysqlDb)
+	newProduct, err := application.NewProduct(MysqlValidName, MysqlValidPrice)
 
 	require.Nil(t, err)
 
 	product, err := productDatabase.Update(newProduct)
 
 	require.Nil(t, err)
-	require.Equal(t, validName, product.GetName())
-	require.Equal(t, validPrice, product.GetPrice())
-	require.Equal(t, validStatus, product.GetStatus())
+	require.Equal(t, MysqlValidName, product.GetName())
+	require.Equal(t, MysqlValidPrice, product.GetPrice())
+	require.Equal(t, MysqlValidStatus, product.GetStatus())
 }
 
 func TestShouldProperlyEnableAProductWithMysqlConnection(t *testing.T) {
-	SetUp()
+	MysqlSetUp()
 
-	defer Db.Close()
+	defer MysqlDb.Close()
 
-	productDatabase := db.NewProductDatabase(Db)
-	newProduct, err := application.NewProduct(validName, validPrice)
+	productDatabase := db.NewProductDatabase(MysqlDb)
+	newProduct, err := application.NewProduct(MysqlValidName, MysqlValidPrice)
 
 	require.Nil(t, err)
 
 	product, err := productDatabase.Enable(newProduct)
 
 	require.Nil(t, err)
-	require.Equal(t, validName, product.GetName())
-	require.Equal(t, validPrice, product.GetPrice())
-	require.Equal(t, validStatus, product.GetStatus())
+	require.Equal(t, MysqlValidName, product.GetName())
+	require.Equal(t, MysqlValidPrice, product.GetPrice())
+	require.Equal(t, MysqlValidStatus, product.GetStatus())
 }
 
 func TestShouldProperlyDisableAProductWithMysqlConnection(t *testing.T) {
-	SetUp()
+	MysqlSetUp()
 
-	defer Db.Close()
+	defer MysqlDb.Close()
 
-	productDatabase := db.NewProductDatabase(Db)
-	newProduct, err := application.NewProduct(validName, validPrice)
+	productDatabase := db.NewProductDatabase(MysqlDb)
+	newProduct, err := application.NewProduct(MysqlValidName, MysqlValidPrice)
 
 	require.Nil(t, err)
 
 	product, err := productDatabase.Disable(newProduct)
 
 	require.Nil(t, err)
-	require.Equal(t, validName, product.GetName())
-	require.Equal(t, validPrice, product.GetPrice())
-	require.Equal(t, validStatus, product.GetStatus())
+	require.Equal(t, MysqlValidName, product.GetName())
+	require.Equal(t, MysqlValidPrice, product.GetPrice())
+	require.Equal(t, MysqlValidStatus, product.GetStatus())
 }

@@ -54,6 +54,8 @@ func TestShouldProperlyUpdateAnProduct(t *testing.T) {
 	product := mock_application_interface.NewMockProductInterface(controller)
 	persistence := mock_application_interface.NewMockProductPersistenceInterface(controller)
 
+	product.EXPECT().GetId().Return(gomock.Any().String()).AnyTimes()
+	persistence.EXPECT().Get(gomock.Any()).Return(product, nil).AnyTimes()
 	persistence.EXPECT().Update(gomock.Any()).Return(product, nil).AnyTimes()
 
 	service := application.ProductService{

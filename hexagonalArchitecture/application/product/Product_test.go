@@ -112,6 +112,19 @@ func TestShouldThrowAnErrorWhenTryToChangeProductStatusToANotValidOne(t *testing
 	require.Equal(t, application.NotValidStatusErrorConst, err.Error())
 }
 
+func TestShouldThrowAnErrorWhenTryToSetANotValidPrice(t *testing.T) {
+	product, err := application.NewProduct(
+		"T-shirt",
+		13,
+	)
+
+	require.Nil(t, err)
+
+	err = product.SetPrice(-13)
+
+	require.Equal(t, application.NotValidPriceErrorConst, err.Error())
+}
+
 func TestShouldProperlyCreateProduct(t *testing.T) {
 	name := "T-shirt"
 	price := float32(13)
