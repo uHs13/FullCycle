@@ -15,10 +15,11 @@ const (
 	disableActionConst = "disable"
 	invalidActionConst = "the selected action is not available"
 
-	getResultConst    = "Product successfully found - Id: %s, Name: %s, Price: %f, Status: %s"
-	createResultConst = "Product successfully created - Id: %s, Name: %s, Price: %f, Status: %s"
-	updateResultConst = "Product successfully updated - Id: %s, Name: %s, Price: %f, Status: %s"
-	enableResultConst = "Product successfully enabled - Id: %s, Name: %s, Price: %f, Status: %s"
+	GetResultConst      = "Product successfully found - Id: %s, Name: %s, Price: %f, Status: %s"
+	CreateResultConst   = "Product successfully created - Id: %s, Name: %s, Price: %f, Status: %s"
+	UpdateResultConst   = "Product successfully updated - Id: %s, Name: %s, Price: %f, Status: %s"
+	EnableResultConst   = "Product successfully enabled - Id: %s, Name: %s, Price: %f, Status: %s"
+	DisabledResultConst = "Product successfully disabled - Id: %s, Name: %s, Price: %f, Status: %s"
 )
 
 func Run(
@@ -62,7 +63,7 @@ func getProduct(
 	}
 
 	return fmt.Sprintf(
-		getResultConst,
+		GetResultConst,
 		product.GetId(),
 		product.GetName(),
 		product.GetPrice(),
@@ -81,7 +82,7 @@ func createProduct(
 		return "", err
 	}
 
-	return buildResultString(createResultConst, createdProduct), nil
+	return buildResultString(CreateResultConst, createdProduct), nil
 }
 
 func updateProduct(
@@ -102,7 +103,7 @@ func updateProduct(
 		return "", err
 	}
 
-	return buildResultString(updateResultConst, updatedProduct), nil
+	return buildResultString(UpdateResultConst, updatedProduct), nil
 }
 
 func enableProduct(
@@ -119,7 +120,7 @@ func enableProduct(
 		return "", err
 	}
 
-	return buildResultString(enableResultConst, enabledProduct), nil
+	return buildResultString(EnableResultConst, enabledProduct), nil
 }
 
 func disableProduct(
@@ -136,10 +137,13 @@ func disableProduct(
 		return "", err
 	}
 
-	return buildResultString(enableResultConst, disabledProduct), nil
+	return buildResultString(DisabledResultConst, disabledProduct), nil
 }
 
-func buildResultString(templateResult string, product application_interface.ProductInterface) string {
+func buildResultString(
+	templateResult string,
+	product application_interface.ProductInterface,
+) string {
 	return fmt.Sprintf(
 		templateResult,
 		product.GetId(),

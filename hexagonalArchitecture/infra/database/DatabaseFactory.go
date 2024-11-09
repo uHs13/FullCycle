@@ -15,7 +15,10 @@ func NewDatabaseFactory(connectionType string) *DatabaseFactory {
 	}
 }
 
-func (databaseFactory *DatabaseFactory) MakeInstance() (application.DatabaseConnectionInterface, error) {
+func (databaseFactory *DatabaseFactory) MakeInstance() (
+	application.DatabaseConnectionInterface,
+	error,
+) {
 	if databaseFactory.ConnectionType == MysqlConnectionConst {
 		connection, err := NewMysqlDatabaseConnection()
 
