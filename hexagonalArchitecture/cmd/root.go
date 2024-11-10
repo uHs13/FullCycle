@@ -14,7 +14,7 @@ import (
 )
 
 var productDatabase *db.ProductDatabase
-var productService *application.ProductService
+var ProductService *application.ProductService
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -34,7 +34,7 @@ to quickly create a Cobra application.`,
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	createApplicationNeeds()
+	CreateApplicationNeeds()
 
 	err := rootCmd.Execute()
 	if err != nil {
@@ -42,14 +42,14 @@ func Execute() {
 	}
 }
 
-func createApplicationNeeds() {
+func CreateApplicationNeeds() {
 	if err := dotEnv.Load(); err != nil {
 		panic(err)
 	}
 
 	productDatabase = createProductDatabase()
 
-	productService = application.NewProductService(productDatabase)
+	ProductService = application.NewProductService(productDatabase)
 }
 
 func createProductDatabase() *db.ProductDatabase {
