@@ -119,6 +119,16 @@ func (product *Product) Disable() error {
 	return nil
 }
 
+func (product *Product) SetId(id string) error {
+	product.Id = id
+
+	if err := product.checkId(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (product *Product) GetId() string {
 	return product.Id
 }
@@ -126,9 +136,7 @@ func (product *Product) GetId() string {
 func (product *Product) SetName(name string) error {
 	product.Name = name
 
-	_, err := product.IsValid()
-
-	if err != nil {
+	if err := product.checkName(); err != nil {
 		return err
 	}
 
@@ -139,6 +147,16 @@ func (product *Product) GetName() string {
 	return product.Name
 }
 
+func (product *Product) SetStatus(status string) error {
+	product.Status = status
+
+	if err := product.checkStatus(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (product *Product) GetStatus() string {
 	return product.Status
 }
@@ -146,9 +164,7 @@ func (product *Product) GetStatus() string {
 func (product *Product) SetPrice(price float32) error {
 	product.Price = price
 
-	_, err := product.IsValid()
-
-	if err != nil {
+	if err := product.checkPrice(); err != nil {
 		return err
 	}
 

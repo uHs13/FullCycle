@@ -2,6 +2,9 @@ package handler
 
 import (
 	"encoding/json"
+	"goHexagonal/adapters/driving/dto"
+	"goHexagonal/adapters/driving/http/jsonResponse"
+	"goHexagonal/adapters/driving/http/routes"
 	application_interface "goHexagonal/application/interface"
 	"net/http"
 
@@ -15,9 +18,14 @@ func MakeProductHandlers(
 	productService application_interface.ProductServiceInterface,
 ) {
 	router.Handle(
-		"/product/{id}",
+		routes.GetProductById,
 		n.With(negroni.Wrap(getProduct(productService))),
 	).Methods(http.MethodGet, http.MethodOptions)
+
+	router.Handle(
+		routes.CreateProduct,
+		n.With(negroni.Wrap(createProduct(productService))),
+	).Methods(http.MethodPost, http.MethodOptions)
 }
 
 func getProduct(productService application_interface.ProductServiceInterface) http.Handler {
@@ -38,6 +46,44 @@ func getProduct(productService application_interface.ProductServiceInterface) ht
 
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
+		}
+	})
+}
+
+func createProduct(productService application_interface.ProductServiceInterface) http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Contenty-Type", "application/json")
+
+		var productDto dto.ProductDto
+
+		if err := json.NewDecoder(request.Body).Decode(&productDto); err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			writer.Write(jsonResponse.ThrowError(err.Error()))
+			return
+		}
+
+		product, err := productDto.ConvertData()
+
+		if err != nil {
+			writer.WriteHeader(http.StatusBadRequest)
+			writer.Write(jsonResponse.ThrowError(err.Error()))
+			return
+		}
+
+		createdProduct, err := productService.Create(product.GetName(), product.GetPrice())
+
+		if err != nil {
+			writer.WriteHeader(http.StatusBadRequest)
+			writer.Write(jsonResponse.ThrowError(err.Error()))
+			return
+		}
+
+		err = json.NewEncoder(writer).Encode(createdProduct)
+
+		if err != nil {
+			writer.WriteHeader(http.StatusBadRequest)
+			writer.Write(jsonResponse.ThrowError(err.Error()))
+			return
 		}
 	})
 }
