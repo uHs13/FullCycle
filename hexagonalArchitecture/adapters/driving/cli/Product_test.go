@@ -168,4 +168,6 @@ func TestShouldReturnTheProperMessageWhenSuccessfullyDisableAProduct(t *testing.
 
 	require.Nil(t, err)
 	require.Equal(t, expectedResult, result)
+
+	// https://www.youtube.com/watch?v=W-ukSOhcrjo
 }
