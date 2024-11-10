@@ -41,3 +41,16 @@ func (productDto *ProductDto) ConvertData() (*application.Product, error) {
 
 	return &product, nil
 }
+
+func (productDto *ProductDto) ConvertId() (*application.Product, error) {
+	product := application.Product{}
+	var err error
+
+	if productDto.Id != "" {
+		if err = product.SetId(productDto.Id); err != nil {
+			return nil, err
+		}
+	}
+
+	return &product, nil
+}
