@@ -43,7 +43,7 @@ export default class Address {
         }
 
         if (this._city.length === 0) {
-            throw new Error('city is required');
+            throw new Error('City is required');
         }
     }
 }
