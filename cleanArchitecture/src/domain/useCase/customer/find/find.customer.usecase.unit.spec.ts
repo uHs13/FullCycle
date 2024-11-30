@@ -15,7 +15,7 @@ const customer = new Customer(uuid, name);
 customer.address = address;
 customer.activate();
 
-const MockCustomerRepository = () => {
+const mockCustomerRepository = () => {
     return {
         create: jest.fn(),
         update: jest.fn(),
@@ -26,7 +26,7 @@ const MockCustomerRepository = () => {
 
 describe('Find customer use case unit tests', () => {
     it('Should properly find a customer', async () => {
-        const customerRepository = MockCustomerRepository();
+        const customerRepository = mockCustomerRepository();
         const useCase = new FindCustomerUseCase(customerRepository);
 
         const input = {
@@ -50,7 +50,7 @@ describe('Find customer use case unit tests', () => {
     });
 
     it('Should throw an error when customer was not found', async () => {
-        const customerRepository = MockCustomerRepository();
+        const customerRepository = mockCustomerRepository();
         const useCase = new FindCustomerUseCase(customerRepository);
 
         const errorMessage = 'Customer not found'

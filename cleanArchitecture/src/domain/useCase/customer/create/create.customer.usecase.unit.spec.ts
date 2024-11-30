@@ -19,7 +19,7 @@ describe('Create customer use case unit tests', () => {
         uuidGenerator: new UuidGenerator(),
     };
 
-    const MockCustomerRepository = () => {
+    const mockCustomerRepository = () => {
         return {
             create: jest.fn(),
             update: jest.fn(),
@@ -29,7 +29,7 @@ describe('Create customer use case unit tests', () => {
     };
 
     it('Should properly create a customer', async () => {
-        const customerRepository = MockCustomerRepository();
+        const customerRepository = mockCustomerRepository();
         const useCase = new CreateCustomerUseCase(customerRepository);
 
         const output = await useCase.execute(input);
@@ -51,7 +51,7 @@ describe('Create customer use case unit tests', () => {
     it('Should throw an error when customer name is not valid', async () => {
         const errorMessage = 'Name is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new CreateCustomerUseCase(customerRepository);
 
             input.name = '';
@@ -62,7 +62,7 @@ describe('Create customer use case unit tests', () => {
     it('Should throw an error when customer address street is empty', async () => {
         const errorMessage = 'Street is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new CreateCustomerUseCase(customerRepository);
 
             const input = {
@@ -83,7 +83,7 @@ describe('Create customer use case unit tests', () => {
     it('Should throw an error when customer address number is zero', async () => {
         const errorMessage = 'Number is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new CreateCustomerUseCase(customerRepository);
 
             const input = {
@@ -104,7 +104,7 @@ describe('Create customer use case unit tests', () => {
     it('Should throw an error when customer address zip code is empty', async () => {
         const errorMessage = 'Zip code is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new CreateCustomerUseCase(customerRepository);
 
             const input = {
@@ -125,7 +125,7 @@ describe('Create customer use case unit tests', () => {
     it('Should throw an error when customer address city is empty', async () => {
         const errorMessage = 'City is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new CreateCustomerUseCase(customerRepository);
 
             const input = {

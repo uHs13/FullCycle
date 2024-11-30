@@ -26,7 +26,7 @@ describe('Update customer use case unit tests', () => {
         }
     };
 
-    const MockCustomerRepository = () => {
+    const mockCustomerRepository = () => {
         return {
             create: jest.fn(),
             update: jest.fn(),
@@ -36,7 +36,7 @@ describe('Update customer use case unit tests', () => {
     };
 
     it('Should properly update a customer', async () => {
-        const customerRepository = MockCustomerRepository();
+        const customerRepository = mockCustomerRepository();
         const useCase = new UpdateCustomerUseCase(customerRepository);
 
         const output = await useCase.execute(input);
@@ -48,7 +48,7 @@ describe('Update customer use case unit tests', () => {
         const errorMessage = 'Customer not found';
 
         expect(async () => {
-            const MockCustomerRepository = () => {
+            const mockCustomerRepository = () => {
                 return {
                     create: jest.fn(),
                     update: jest.fn(),
@@ -57,7 +57,7 @@ describe('Update customer use case unit tests', () => {
                 };
             };
 
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new UpdateCustomerUseCase(customerRepository);
 
             await useCase.execute(input);
@@ -67,7 +67,7 @@ describe('Update customer use case unit tests', () => {
     it('Should throw an error when customer name is not valid', async () => {
         const errorMessage = 'Name is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new UpdateCustomerUseCase(customerRepository);
 
             const input = {
@@ -88,7 +88,7 @@ describe('Update customer use case unit tests', () => {
     it('Should throw an error when customer address street is empty', async () => {
         const errorMessage = 'Street is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new UpdateCustomerUseCase(customerRepository);
 
             const input = {
@@ -109,7 +109,7 @@ describe('Update customer use case unit tests', () => {
     it('Should throw an error when customer address number is zero', async () => {
         const errorMessage = 'Number is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new UpdateCustomerUseCase(customerRepository);
 
             const input = {
@@ -130,7 +130,7 @@ describe('Update customer use case unit tests', () => {
     it('Should throw an error when customer address zip code is empty', async () => {
         const errorMessage = 'Zip code is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new UpdateCustomerUseCase(customerRepository);
 
             const input = {
@@ -151,7 +151,7 @@ describe('Update customer use case unit tests', () => {
     it('Should throw an error when customer address city is empty', async () => {
         const errorMessage = 'City is required';
         expect(async () => {
-            const customerRepository = MockCustomerRepository();
+            const customerRepository = mockCustomerRepository();
             const useCase = new UpdateCustomerUseCase(customerRepository);
 
             const input = {
