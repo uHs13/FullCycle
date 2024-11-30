@@ -21,19 +21,23 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     }
 
     async update(entity: Customer): Promise<void> {
-        await CustomerModel.update(
-            {
-                name: entity.name,
-                active: entity.isActive(),
-                street: entity.address.street,
-                number: entity.address.number,
-                zip: entity.address.zip,
-                city: entity.address.city,
-            },
-            {
-                where: {id: entity.id}
-            }
-        );
+        try {
+            await CustomerModel.update(
+                {
+                    name: entity.name,
+                    active: entity.isActive(),
+                    street: entity.address.street,
+                    number: entity.address.number,
+                    zip: entity.address.zip,
+                    city: entity.address.city,
+                },
+                {
+                    where: {id: entity.id}
+                }
+            );
+        } catch (error) {
+            throw new Error('Was not possible to update the customer');
+        }
     }
 
     async find(id: string): Promise<Customer> {
