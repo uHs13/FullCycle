@@ -4,48 +4,64 @@ import ProductModel from "./product.model";
 
 export default class ProductRepository implements ProductRepositoryInterface {
     async create(entity: Product): Promise<void> {
-        await ProductModel.create({
-            id: entity.id,
-            name: entity.name,
-            price: entity.price
-        });
+        try {
+            await ProductModel.create({
+                id: entity.id,
+                name: entity.name,
+                price: entity.price
+            });
+        } catch (error) {
+            throw new Error('Was not possible to create the product');
+        }
     }
 
     async update(entity: Product): Promise<void> {
-        await ProductModel.update(
-            {
-                name: entity.name,
-                price: entity.price,
-            },
-            {
-               where: {id: entity.id}
-            }
-        );
+        try {
+            await ProductModel.update(
+                {
+                    name: entity.name,
+                    price: entity.price,
+                },
+                {
+                   where: {id: entity.id}
+                }
+            );
+        } catch (error) {
+            throw new Error('Was not possible to update the product');
+        }
     }
 
     async find(id: string): Promise<Product> {
-        const productModel = await ProductModel.findOne({where: {id}});
+        try {
+            const productModel = await ProductModel.findOne({where: {id}});
 
-        return new Product(
-            productModel.id,
-            productModel.name,
-            productModel.price
-        );
+            return new Product(
+                productModel.id,
+                productModel.name,
+                productModel.price
+            );
+        } catch(error) {
+            throw new Error('Was not possible to find the product');
+        }
     }
 
     async findAll(): Promise<Product[]> {
-        const productModels = await ProductModel.findAll();
+        try {
+            const productModels = await ProductModel.findAll();
 
-        let products: Product[] = [];
+            let products: Product[] = [];
 
-        productModels.forEach(product => {
-            products.push(new Product(
-                product.id,
-                product.name,
-                product.price
-            ));
-        });
+            productModels.forEach(product => {
+                products.push(new Product(
+                    product.id,
+                    product.name,
+                    product.price
+                ));
+            });
 
-        return products;
+            return products;
+        } catch(error) {
+            throw new Error('Was not possible to find all products');
+        }
     }
 }

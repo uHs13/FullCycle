@@ -74,4 +74,24 @@ describe('Update customer use case integration tests', () => {
 
         expect(foundOutput).toStrictEqual(updateInput);
     });
+
+    it('Should throw an error when try to update an inexistent customer', async () => {
+        expect(async () => {
+            const customerRepository = new CustomerRepository();
+            const useCase = new UpdateCustomerUseCase(customerRepository);
+
+            const updateInput = {
+                id: 'inexistent-uuid',
+                name: 'name',
+                address: {
+                    street: 'street',
+                    number: 13,
+                    zipCode: '1313',
+                    city: 'city',
+                },
+            };
+
+            await useCase.execute(updateInput);
+        }).rejects.toThrow('Customer not found');
+    });
 });

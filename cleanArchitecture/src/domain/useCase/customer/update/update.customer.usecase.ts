@@ -1,7 +1,7 @@
 import Customer from "../../../customer/entity/customer";
 import CustomerRepositoryInterface from "../../../customer/repository/customerRepositoryInterface";
 import Address from "../../../customer/valueObject/address";
-import { InputUpdateCustomerDto, OutputUpdateCustomerDto } from "./update.customer.dto";
+import { InputUpdateCustomerDtoInterface, OutputUpdateCustomerDtoInterface } from "./update.customer.dto";
 
 export default class UpdateCustomerUseCase {
     private customerRepository: CustomerRepositoryInterface;
@@ -10,7 +10,7 @@ export default class UpdateCustomerUseCase {
         this.customerRepository = customerRepository;
     }
 
-    public async execute(input: InputUpdateCustomerDto): Promise<OutputUpdateCustomerDto> {
+    public async execute(input: InputUpdateCustomerDtoInterface): Promise<OutputUpdateCustomerDtoInterface> {
         try {
             const customer = await this.findCustomer(input.id);
             customer.changeName(input.name);
