@@ -11,7 +11,7 @@ describe('Find customer use case integration tests', () => {
     beforeEach(async () => {
         sequelize = new Sequelize({
             dialect: 'sqlite',
-            storage: 'memory',
+            storage: ':memory:',
             logging: false,
             sync: {force: true},
         });
@@ -61,5 +61,18 @@ describe('Find customer use case integration tests', () => {
         const output = await useCase.execute(input);
 
         expect(output).toStrictEqual(expectedOutput);
+    });
+
+    it('Should throw an error when customer does not exist', async () => {
+        expect(async () => {
+            const input = {
+                id: 'not-existent-uuid'
+            };
+
+            const customerRepository = new CustomerRepository();
+            const useCase = new FindCustomerUseCase(customerRepository);
+
+            await useCase.execute(input);
+        }).rejects.toThrow('Customer not found');
     });
 });
