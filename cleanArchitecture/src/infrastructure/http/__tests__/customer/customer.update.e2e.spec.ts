@@ -1,5 +1,6 @@
 import {app, sequelize} from "../../express"
 import request from "supertest";
+import { httpStatusCodes } from "../../routes/routes";
 
 describe('Update customer http endpoint end to end tests', () => {
     beforeEach(async () => {
@@ -65,6 +66,49 @@ describe('Update customer http endpoint end to end tests', () => {
 
         expect(updatedResponse.status).toEqual(200);
         expect(updatedResponse.body).toStrictEqual(expectedOutput);
+    });
+
+    it('Should throw an error when data is missing', async () => {
+        const createEndpoint = '/customer';
+        const name = 'John Cena';
+        const street = 'street';
+        const number = 13;
+        const zipCode = '1313';
+        const city = 'city';
+
+        const createResponse = await request(app)
+            .post(createEndpoint)
+            .send({
+                name: name,
+                address: {
+                    street: street,
+                    number: number,
+                    zipCode: zipCode,
+                    city: city
+                }
+            })
+        ;
+
+        const updateEndpoint = `/customer/${createResponse.body.id}`;
+
+        const updatedStreet = 'street Two';
+        const updatedNumber = 13;
+        const updatedZipCode = '1313 two';
+        const updatedCity = 'city two';
+
+        const updatedResponse = await request(app)
+            .put(updateEndpoint)
+            .send({
+                address: {
+                    street: updatedStreet,
+                    number: updatedNumber,
+                    zipCode: updatedZipCode,
+                    city: updatedCity
+                }
+            });
+        ;
+
+        expect(updatedResponse.status).toEqual(httpStatusCodes.internalServerError);
     });
 
     it('Should throw an error when customer does not exist', async () => {

@@ -5,5 +5,6 @@ export const httpStatusCodes = {
 };
 
 export const routeGroups = {
-    customer: "/customer"
-}
+    customer: "/customer",
+    product: "/product"
+};

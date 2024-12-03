@@ -10,15 +10,19 @@ export default class CreateProductUseCase {
     }
 
     public async execute(input: InputCreateProductDtoInterface): Promise<OutputCreateProductDtoInterface> {
-        const product = this.buildProduct(input);
+        try {
+            const product = this.buildProduct(input);
 
-        await this.productRepository.create(product);
-
-        return {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-        };
+            await this.productRepository.create(product);
+    
+            return {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+            };
+        } catch (error) {
+            throw error;
+        }
     }
 
     private buildProduct(input: InputCreateProductDtoInterface): Product {
