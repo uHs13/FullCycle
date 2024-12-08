@@ -1,12 +1,17 @@
+import Entity from "../../@shared/entity/entity.abstract";
+import NotificationError from "../../@shared/notification/notification.error";
 import Address from "../valueObject/address";
 
-export default class Customer {
+export default class Customer extends Entity {
     private _id: string;
     private _name: string;
     private _active: boolean = true;
     private _address!: Address;
+    private _errorContext: string = 'Customer';
 
     constructor(id: string, name: string) {
+        super();
+
         this._id = id;
         this._name = name;
 
@@ -35,11 +40,21 @@ export default class Customer {
 
     validate() {
         if (this._id.length === 0) {
-            throw new Error('Id is required');
+            this.notification.addError({
+                context: this._errorContext,
+                message: 'Id is required'
+            });
         }
 
         if (this._name.length === 0) {
-            throw new Error('Name is required');
+            this.notification.addError({
+                context: this._errorContext,
+                message: 'Name is requiredd'
+            });
+        }
+
+        if (this.notification.hasErrors()) {
+            throw new NotificationError(this.notification.getErrors());
         }
     }
 
@@ -51,7 +66,10 @@ export default class Customer {
 
     activate(): void {
         if (this._address === undefined) {
-            throw new Error('To activate the customer you must inform an address');
+            this.notification.addError({
+                context: this._errorContext,
+                message: 'To activate the customer you must inform an address'
+            });
         }
 
         this._active = true;

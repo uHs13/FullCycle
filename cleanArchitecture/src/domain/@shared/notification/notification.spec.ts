@@ -37,4 +37,30 @@ describe('Notification unit tests', () => {
         errorString = 'customer: message,customer: message two,order: message three,';
         expect(notification.listMessages()).toBe(errorString);
     });
+
+    it('Should check if notification has errors', () => {
+        const notification = new Notification();
+
+        const error = {
+            message: 'message',
+            context: 'customer'
+        };
+
+        notification.addError(error);
+
+        expect(notification.hasErrors()).toBe(true);
+    });
+
+    it('Should return all errors', () => {
+        const notification = new Notification();
+
+        const error = {
+            message: 'message',
+            context: 'customer'
+        };
+
+        notification.addError(error);
+
+        expect(notification.getErrors()).toEqual([error]);
+    });
 });
