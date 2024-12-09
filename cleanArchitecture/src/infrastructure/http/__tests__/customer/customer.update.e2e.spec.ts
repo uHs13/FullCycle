@@ -180,7 +180,7 @@ describe('Update customer http endpoint end to end tests', () => {
         ;
 
         expect(updatedResponse.status).toEqual(500);
-        expect(updatedResponse.body.error).toStrictEqual('Name is required');
+        expect(updatedResponse.body.error).toStrictEqual('Customer: Name is required');
     });
 
     it('Should throw an error when customer address street is not valid', async () => {

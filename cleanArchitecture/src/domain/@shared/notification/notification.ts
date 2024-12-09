@@ -29,4 +29,8 @@ export default class Notification {
     public hasErrors(): boolean {
         return this.errors.length > 0;
     }
+
+    public clearErrors(): void {
+        this.errors = [];
+    }
 }

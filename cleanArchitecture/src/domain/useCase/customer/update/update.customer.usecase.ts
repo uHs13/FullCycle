@@ -13,6 +13,7 @@ export default class UpdateCustomerUseCase {
     public async execute(input: InputUpdateCustomerDtoInterface): Promise<OutputUpdateCustomerDtoInterface> {
         try {
             const customer = await this.findCustomer(input.id);
+
             customer.changeName(input.name);
 
             const address = new Address(

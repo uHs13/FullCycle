@@ -49,13 +49,11 @@ export default class Customer extends Entity {
         if (this._name.length === 0) {
             this.notification.addError({
                 context: this._errorContext,
-                message: 'Name is requiredd'
+                message: 'Name is required'
             });
         }
 
-        if (this.notification.hasErrors()) {
-            throw new NotificationError(this.notification.getErrors());
-        }
+        this.throwErrors();
     }
 
     changeName(name: string): void {
@@ -72,6 +70,8 @@ export default class Customer extends Entity {
             });
         }
 
+        this.throwErrors();
+
         this._active = true;
     }
 
@@ -81,5 +81,15 @@ export default class Customer extends Entity {
 
     isActive(): boolean {
         return this._active;
+    }
+
+    throwErrors(): void {
+        if (this.notification.hasErrors()) {
+            const errors = this.notification.getErrors();
+
+            this.notification.clearErrors();
+
+            throw new NotificationError(errors);
+        }
     }
 }

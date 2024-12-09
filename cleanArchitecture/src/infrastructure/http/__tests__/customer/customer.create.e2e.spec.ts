@@ -74,7 +74,7 @@ describe('Create customer http endpoint end to end tests', () => {
         ;
 
         expect(response.status).toBe(500);
-        expect(response.body.error).toBe('Name is required');
+        expect(response.body.error).toBe('Customer: Name is required');
     });
 
     it('Should throw an error when address street is invalid', async () => {
