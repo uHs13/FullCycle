@@ -4,6 +4,7 @@ import ListCustomerUseCase from "../../../../domain/useCase/customer/list/list.c
 import UpdateCustomerUseCase from "../../../../domain/useCase/customer/update/update.customer.usecase";
 import CustomerRepository from "../../../customer/repository/sequelize/customer.repository";
 import UuidGenerator from "../../../uuid/uuid.generator";
+import CustomerListPresenter from "../../presenters/customer.list.presenter";
 import {httpStatusCodes} from "../routes";
 import {Request, Response} from "express";
 import express from "express";
@@ -43,7 +44,10 @@ customerRouter.get("/", async (req: Request, res: Response) => {
 
         const output = await useCase.execute({});
 
-        res.status(httpStatusCodes.ok).send(output);
+        res.format({
+            json: async () => res.status(httpStatusCodes.ok).send(output),
+            xml: async () => res.status(httpStatusCodes.ok).send(CustomerListPresenter.toXml(output))
+        });
     } catch (error) {
         if (error instanceof Error) {
             res.status(httpStatusCodes.internalServerError).send({error: error.message});
