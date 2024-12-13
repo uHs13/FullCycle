@@ -1,4 +1,5 @@
 import Entity from "../../@shared/entity/entity.abstract";
+import CustomerValidatorFactory from "../factory/customer.validator.factory";
 import Address from "../valueObject/address";
 
 export default class Customer extends Entity {
@@ -6,7 +7,7 @@ export default class Customer extends Entity {
     private _name: string;
     private _active: boolean = true;
     private _address!: Address;
-    private _errorContext: string = 'Customer';
+    public errorContext: string = 'Customer';
 
     constructor(id: string, name: string) {
         super();
@@ -38,21 +39,7 @@ export default class Customer extends Entity {
     }
 
     validate() {
-        if (this._id.length === 0) {
-            this.notification.addError({
-                context: this._errorContext,
-                message: 'Id is required'
-            });
-        }
-
-        if (this._name.length === 0) {
-            this.notification.addError({
-                context: this._errorContext,
-                message: 'Name is required'
-            });
-        }
-
-        this.throwErrors();
+        CustomerValidatorFactory.create().validate(this);
     }
 
     changeName(name: string): void {
@@ -64,7 +51,7 @@ export default class Customer extends Entity {
     activate(): void {
         if (this._address === undefined) {
             this.notification.addError({
-                context: this._errorContext,
+                context: this.errorContext,
                 message: 'To activate the customer you must inform an address'
             });
         }
