@@ -1,5 +1,4 @@
 import Entity from "../../@shared/entity/entity.abstract";
-import NotificationError from "../../@shared/notification/notification.error";
 import Address from "../valueObject/address";
 
 export default class Customer extends Entity {
@@ -81,15 +80,5 @@ export default class Customer extends Entity {
 
     isActive(): boolean {
         return this._active;
-    }
-
-    throwErrors(): void {
-        if (this.notification.hasErrors()) {
-            const errors = this.notification.getErrors();
-
-            this.notification.clearErrors();
-
-            throw new NotificationError(errors);
-        }
     }
 }

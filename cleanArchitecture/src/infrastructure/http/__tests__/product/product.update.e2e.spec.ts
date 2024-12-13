@@ -103,7 +103,7 @@ describe('List product http endpoint end to end tests', () => {
         ;
 
         expect(updateResponse.status).toEqual(500);
-        expect(updateResponse.body.error).toStrictEqual('The name is required');
+        expect(updateResponse.body.error).toStrictEqual('Product: The name is required');
     });
 
     it('Should throw an error when price is invalid', async () => {
@@ -135,6 +135,6 @@ describe('List product http endpoint end to end tests', () => {
         ;
 
         expect(updateResponse.status).toEqual(500);
-        expect(updateResponse.body.error).toStrictEqual('The price must be greater or equal to zero');
+        expect(updateResponse.body.error).toStrictEqual('Product: The price must be greater or equal to zero');
     });
 });

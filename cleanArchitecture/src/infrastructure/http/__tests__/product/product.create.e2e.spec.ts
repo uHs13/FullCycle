@@ -63,7 +63,7 @@ describe('Create product http endpoint end to end tests', () => {
         ;
 
         expect(response.status).toEqual(httpStatusCodes.internalServerError);
-        expect(response.body.error).toStrictEqual('The name is required');
+        expect(response.body.error).toStrictEqual('Product: The name is required');
     });
 
     it('Should throw an error when price is not valid', async () => {
@@ -81,6 +81,6 @@ describe('Create product http endpoint end to end tests', () => {
         ;
 
         expect(response.status).toEqual(httpStatusCodes.internalServerError);
-        expect(response.body.error).toStrictEqual('The price must be greater or equal to zero');
+        expect(response.body.error).toStrictEqual('Product: The price must be greater or equal to zero');
     });
 });
