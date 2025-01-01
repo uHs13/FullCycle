@@ -1,6 +1,6 @@
 import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import Product from "../../domain/product.entity";
-import ProductGatewayInterface from "../../gateway/product.gateway";
+import ProductGatewayInterface from "../../gateway/product.gateway.interface";
 import ProductModel from "./product.model.sequelize";
 
 export default class ProductRepository implements ProductGatewayInterface {
