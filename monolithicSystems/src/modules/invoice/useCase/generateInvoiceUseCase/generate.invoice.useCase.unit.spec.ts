@@ -1,6 +1,7 @@
 import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import Invoice from "../../domain/invoice";
 import Item from "../../domain/item";
+import ItemsTotalCalculatorService from "../../domain/service/items.total.calculator.service";
 import AddressValueObject from "../../domain/valueObject/address.value.object";
 import GenerateInvoiceUseCase from "./generate.invoice.useCase";
 
@@ -72,7 +73,8 @@ describe('Generate invoice use case unit test', () => {
                 id: itemId.value,
                 name: itemName,
                 price: itemPrice,
-            }]
+            }],
+            calculatorService: new ItemsTotalCalculatorService()
         }
 
         const output = await useCase.execute(input);

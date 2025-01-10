@@ -29,7 +29,7 @@ export default class GenerateInvoiceUseCase implements UseCaseInterface {
                 city: generatedInvoice.address.city,
                 state: generatedInvoice.address.state,
                 zipCode: generatedInvoice.address.zipCode,
-                total: this.calculateInvoiceTotal(generatedInvoice.items),
+                total: input.calculatorService.calculateTotal(generatedInvoice.items),
                 items: generatedInvoice.items.map((item) => ({
                     id: item.id.value,
                     name: item.name,
@@ -66,15 +66,5 @@ export default class GenerateInvoiceUseCase implements UseCaseInterface {
             address: address,
             items: items
         });
-    }
-
-    private calculateInvoiceTotal(items: Item[]): number {
-        let invoiceTotal = 0;
-
-        items.forEach(item => {
-            invoiceTotal += item.price;
-        });
-
-        return invoiceTotal;
     }
 }

@@ -1,3 +1,5 @@
+import ItemsTotalCalculatorService from "../../domain/service/items.total.calculator.service";
+
 export interface GenerateInvoiceUseCaseInputDto {
     name: string;
     document: string;
@@ -12,6 +14,7 @@ export interface GenerateInvoiceUseCaseInputDto {
         name: string;
         price: number;
     }[];
+    calculatorService: ItemsTotalCalculatorService
 }
 
 export interface GenerateInvoiceUseCaseOutputDto {
