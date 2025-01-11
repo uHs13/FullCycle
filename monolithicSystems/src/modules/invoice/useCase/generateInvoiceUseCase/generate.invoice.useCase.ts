@@ -4,7 +4,7 @@ import Invoice from "../../domain/invoice";
 import Item from "../../domain/item";
 import AddressValueObject from "../../domain/valueObject/address.value.object";
 import GatewayInterface from "../../gateway/invoice.gateway.interface";
-import { GenerateInvoiceUseCaseInputDto, GenerateInvoiceUseCaseOutputDto } from "./generate.invouce.useCase.dto";
+import { GenerateInvoiceUseCaseInputDto, GenerateInvoiceUseCaseOutputDto } from "./generate.invoice.useCase.dto";
 
 export default class GenerateInvoiceUseCase implements UseCaseInterface {
     private repository: GatewayInterface;
