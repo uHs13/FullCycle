@@ -1,22 +1,29 @@
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
 import { ClientAdminFacadeInterface } from "../../../clientAdmin/facade/clientAdmin.facade.interface";
+import ProductAdminFacadeInterface from "../../../productAdmin/facade/productAdmin.facade.interface";
 import Client from "../../domain/client.entity";
 import { PlaceOrderInputDto, PlaceOrderOutputDto } from "./placeOrder.dto";
 
 type PlaceOrderUseCaseProperties = {
-    clientAdminFacade: ClientAdminFacadeInterface
+    clientAdminFacade: ClientAdminFacadeInterface,
+    productAdminFacade: ProductAdminFacadeInterface,
 }
 
 export default class PlaceOrderUseCase implements UseCaseInterface {
     private clientAdminFacade: ClientAdminFacadeInterface;
+    private productAdminFacade: ProductAdminFacadeInterface;
     private input: PlaceOrderInputDto;
     private client: Client;
 
     private clientNotFoundError: string = 'Client not found';
     private invalidProductIdError: string = 'Invalid product id';
+    private productOutofStockError: string = 'Product out of stock';
+
+    private zeroValue: number = 0;
 
     constructor(input: PlaceOrderUseCaseProperties) {
         this.clientAdminFacade = input.clientAdminFacade;
+        this.productAdminFacade = input.productAdminFacade;
     }
 
     async execute(input: PlaceOrderInputDto): Promise<PlaceOrderOutputDto> {
@@ -34,9 +41,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
                 products: []
             }
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
-            }
+            throw error;
         }
     }
 
@@ -54,22 +59,32 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
                 address: clientProperties.address,
             });
         } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
-            }
+            throw error;
         }
     }
 
     private async validateProducts(): Promise<void> {
-        try {
-            this.input.products.forEach(product => {
-                if (product.productId.length === 0) {
-                    throw new Error(this.invalidProductIdError);
-                }
-            });
-        } catch (error) {
-            if (error instanceof Error) {
-                throw new Error(error.message);
+        this.checkProductsIds();
+        await this.checkProductsStock();
+    }
+
+    private checkProductsIds(): void {
+        this.input.products.forEach(product => {
+            if (product.productId.length === this.zeroValue) {
+                throw new Error(this.invalidProductIdError);
+            }
+        });
+    }
+
+    private async checkProductsStock(): Promise<void> {
+        for (const product of this.input.products) {
+            const productStockInfo = await this
+                .productAdminFacade
+                .checkProductStockAmount({id: product.productId})
+            ;
+
+            if (productStockInfo.stockAmount === this.zeroValue) {
+                throw new Error(this.productOutofStockError);
             }
         }
     }
