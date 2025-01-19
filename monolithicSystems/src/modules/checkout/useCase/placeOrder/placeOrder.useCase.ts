@@ -1,19 +1,26 @@
+import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
 import { ClientAdminFacadeInterface } from "../../../clientAdmin/facade/clientAdmin.facade.interface";
 import ProductAdminFacadeInterface from "../../../productAdmin/facade/productAdmin.facade.interface";
+import StoreCatalogFacadeInterface from "../../../storeCatalog/facade/storeCatalog.facade.interface";
 import Client from "../../domain/client.entity";
+import Product from "../../domain/product.entity";
 import { PlaceOrderInputDto, PlaceOrderOutputDto } from "./placeOrder.dto";
 
 type PlaceOrderUseCaseProperties = {
     clientAdminFacade: ClientAdminFacadeInterface,
     productAdminFacade: ProductAdminFacadeInterface,
+    storeCatalogFacade: StoreCatalogFacadeInterface,
 }
 
 export default class PlaceOrderUseCase implements UseCaseInterface {
     private clientAdminFacade: ClientAdminFacadeInterface;
     private productAdminFacade: ProductAdminFacadeInterface;
+    private storeCatalogFacade: StoreCatalogFacadeInterface;
+
     private input: PlaceOrderInputDto;
     private client: Client;
+    private products: Product[];
 
     private clientNotFoundError: string = 'Client not found';
     private invalidProductIdError: string = 'Invalid product id';
@@ -24,6 +31,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
     constructor(input: PlaceOrderUseCaseProperties) {
         this.clientAdminFacade = input.clientAdminFacade;
         this.productAdminFacade = input.productAdminFacade;
+        this.storeCatalogFacade = input.storeCatalogFacade;
     }
 
     async execute(input: PlaceOrderInputDto): Promise<PlaceOrderOutputDto> {
@@ -32,6 +40,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
 
             await this.findClient();
             await this.validateProducts();
+            await this.loadProducts();
 
             return {
                 id: '',
@@ -86,6 +95,22 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
             if (productStockInfo.stockAmount === this.zeroValue) {
                 throw new Error(this.productOutofStockError);
             }
+        }
+    }
+
+    private async loadProducts(): Promise<void> {
+        for (const product of this.input.products) {
+            const foundProduct = await this
+                .storeCatalogFacade
+                .find({id: product.productId})
+            ;
+
+            this.products.push(new Product({
+                id: new Uuid(foundProduct.id),
+                name: foundProduct.name,
+                description: foundProduct.description,
+                purchasePrice: foundProduct.sellingPrice,
+            }));
         }
     }
 }

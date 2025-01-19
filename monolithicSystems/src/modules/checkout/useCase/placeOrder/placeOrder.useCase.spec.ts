@@ -17,9 +17,17 @@ describe('Place order use case unit tests', () => {
                 }
             }
 
+            const mockStoreCatalogFacade = () => {
+                return {
+                    find: jest.fn().mockRejectedValue(new Error('productError')),
+                    findAll: jest.fn()
+                }
+            }
+
             const useCaseProperties = {
                 clientAdminFacade: mockClientAdminFacade(),
-                productAdminFacade: mockProductAdminFacade()
+                productAdminFacade: mockProductAdminFacade(),
+                storeCatalogFacade: mockStoreCatalogFacade(),
             }
 
             const useCaseInput = {
@@ -59,9 +67,17 @@ describe('Place order use case unit tests', () => {
                 }
             }
 
+            const mockStoreCatalogFacade = () => {
+                return {
+                    find: jest.fn().mockRejectedValue(new Error('productError')),
+                    findAll: jest.fn()
+                }
+            }
+
             const useCaseProperties = {
                 clientAdminFacade: mockClientAdminFacade(),
-                productAdminFacade: mockProductAdminFacade()
+                productAdminFacade: mockProductAdminFacade(),
+                storeCatalogFacade: mockStoreCatalogFacade(),
             }
 
             const useCaseInput = {
@@ -105,9 +121,17 @@ describe('Place order use case unit tests', () => {
                     }
                 }
 
+                const mockStoreCatalogFacade = () => {
+                    return {
+                        find: jest.fn().mockRejectedValue(new Error(productError)),
+                        findAll: jest.fn()
+                    }
+                }
+
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
-                    productAdminFacade: mockProductAdminFacade()
+                    productAdminFacade: mockProductAdminFacade(),
+                    storeCatalogFacade: mockStoreCatalogFacade(),
                 }
 
                 const useCaseInput = {
@@ -139,15 +163,23 @@ describe('Place order use case unit tests', () => {
                     return {
                         addProduct: jest.fn(),
                         checkProductStockAmount: jest.fn().mockResolvedValue({
-                            id: 'id',
+                            id: 'e634870e-5378-432d-85b6-a0af105dde55',
                             stockAmount: 0
                         })
                     }
                 }
 
+                const mockStoreCatalogFacade = () => {
+                    return {
+                        find: jest.fn().mockRejectedValue(new Error(productError)),
+                        findAll: jest.fn()
+                    }
+                }
+
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
-                    productAdminFacade: mockProductAdminFacade()
+                    productAdminFacade: mockProductAdminFacade(),
+                    storeCatalogFacade: mockStoreCatalogFacade(),
                 }
 
                 const useCaseInput = {
@@ -163,5 +195,111 @@ describe('Place order use case unit tests', () => {
                 await useCase.execute(useCaseInput);    
             }).rejects.toThrow(productError);
         });
-    })
+    });
+
+    describe('Get products unit tests', () => {
+        it('Should throw an error when product was not found', async () => {
+            const productError = 'Was not possible to find the product';
+
+            expect(async () => {
+                const mockClientAdminFacade = () => {
+                    return {
+                        find: jest.fn().mockResolvedValue({
+                            id: 'id',
+                            name: 'name',
+                            email: 'email'
+                        }),
+                        add: jest.fn()
+                    }
+                }
+
+                const mockProductAdminFacade = () => {
+                    return {
+                        addProduct: jest.fn(),
+                        checkProductStockAmount: jest.fn().mockResolvedValue({
+                            id: 'e634870e-5378-432d-85b6-a0af105dde55',
+                            stockAmount: 13
+                        })
+                    }
+                }
+
+                const mockStoreCatalogFacade = () => {
+                    return {
+                        find: jest.fn().mockRejectedValue(new Error(productError)),
+                        findAll: jest.fn()
+                    }
+                }
+
+                const useCaseProperties = {
+                    clientAdminFacade: mockClientAdminFacade(),
+                    productAdminFacade: mockProductAdminFacade(),
+                    storeCatalogFacade: mockStoreCatalogFacade(),
+                }
+
+                const useCaseInput = {
+                    clientId: '208a9b9e-c0a9-418b-9763-3d6cfcc8904c',
+                    products: [
+                        {
+                            productId: 'e634870e-5378-432d-85b6-a0af105dde55'
+                        }
+                    ]
+                };
+
+                const useCase = new PlaceOrderUseCase(useCaseProperties);
+                await useCase.execute(useCaseInput);    
+            }).rejects.toThrow(productError);
+        });
+
+        it('Should throw an error when product was not found', async () => {
+            const productError = 'Was not possible to find the product';
+
+            expect(async () => {
+                const mockClientAdminFacade = () => {
+                    return {
+                        find: jest.fn().mockResolvedValue({
+                            id: 'id',
+                            name: 'name',
+                            email: 'email'
+                        }),
+                        add: jest.fn()
+                    }
+                }
+
+                const mockProductAdminFacade = () => {
+                    return {
+                        addProduct: jest.fn(),
+                        checkProductStockAmount: jest.fn().mockResolvedValue({
+                            id: 'e634870e-5378-432d-85b6-a0af105dde55',
+                            stockAmount: 13
+                        })
+                    }
+                }
+
+                const mockStoreCatalogFacade = () => {
+                    return {
+                        find: jest.fn().mockRejectedValue(new Error(productError)),
+                        findAll: jest.fn()
+                    }
+                }
+
+                const useCaseProperties = {
+                    clientAdminFacade: mockClientAdminFacade(),
+                    productAdminFacade: mockProductAdminFacade(),
+                    storeCatalogFacade: mockStoreCatalogFacade(),
+                }
+
+                const useCaseInput = {
+                    clientId: '208a9b9e-c0a9-418b-9763-3d6cfcc8904c',
+                    products: [
+                        {
+                            productId: 'e634870e-5378-432d-85b6-a0af105dde55'
+                        }
+                    ]
+                };
+
+                const useCase = new PlaceOrderUseCase(useCaseProperties);
+                await useCase.execute(useCaseInput);    
+            }).rejects.toThrow(productError);
+        });
+    });
 });
