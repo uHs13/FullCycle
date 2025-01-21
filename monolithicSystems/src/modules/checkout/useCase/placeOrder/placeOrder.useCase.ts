@@ -1,9 +1,11 @@
 import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
 import { ClientAdminFacadeInterface } from "../../../clientAdmin/facade/clientAdmin.facade.interface";
+import PaymentFacadeInterface from "../../../payment/facade/payment.facade.interface";
 import ProductAdminFacadeInterface from "../../../productAdmin/facade/productAdmin.facade.interface";
 import StoreCatalogFacadeInterface from "../../../storeCatalog/facade/storeCatalog.facade.interface";
 import Client from "../../domain/client.entity";
+import OrderEntity from "../../domain/order.entity";
 import Product from "../../domain/product.entity";
 import { PlaceOrderInputDto, PlaceOrderOutputDto } from "./placeOrder.dto";
 
@@ -11,20 +13,26 @@ type PlaceOrderUseCaseProperties = {
     clientAdminFacade: ClientAdminFacadeInterface,
     productAdminFacade: ProductAdminFacadeInterface,
     storeCatalogFacade: StoreCatalogFacadeInterface,
+    paymentFacade: PaymentFacadeInterface,
 }
 
 export default class PlaceOrderUseCase implements UseCaseInterface {
     private clientAdminFacade: ClientAdminFacadeInterface;
     private productAdminFacade: ProductAdminFacadeInterface;
     private storeCatalogFacade: StoreCatalogFacadeInterface;
+    private paymentFacade: PaymentFacadeInterface;
 
     private input: PlaceOrderInputDto;
     private client: Client;
-    private products: Product[];
+    private products: Product[] = [];
+    private order: OrderEntity;
 
     private clientNotFoundError: string = 'Client not found';
     private invalidProductIdError: string = 'Invalid product id';
     private productOutofStockError: string = 'Product out of stock';
+    private deniedPaymentError: string = 'It was not possible to process the payment';
+
+    private deniedPaymentStatus = 'denied';
 
     private zeroValue: number = 0;
 
@@ -32,6 +40,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         this.clientAdminFacade = input.clientAdminFacade;
         this.productAdminFacade = input.productAdminFacade;
         this.storeCatalogFacade = input.storeCatalogFacade;
+        this.paymentFacade = input.paymentFacade;
     }
 
     async execute(input: PlaceOrderInputDto): Promise<PlaceOrderOutputDto> {
@@ -41,6 +50,8 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
             await this.findClient();
             await this.validateProducts();
             await this.loadProducts();
+            this.createOrder();
+            await this.processPayment();
 
             return {
                 id: '',
@@ -111,6 +122,25 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
                 description: foundProduct.description,
                 purchasePrice: foundProduct.sellingPrice,
             }));
+        }
+    }
+
+    private createOrder(): void {
+        this.order = new OrderEntity({
+            id: new Uuid(),
+            client: this.client,
+            products: this.products,
+        });
+    }
+
+    private async processPayment(): Promise<void> {
+        const processedPayment = await this.paymentFacade.save({
+            orderId: this.order.id.value,
+            amount: this.order.calculateTotal()
+        });
+
+        if (processedPayment.status === this.deniedPaymentStatus) {
+            throw new Error(this.deniedPaymentError);
         }
     }
 }
