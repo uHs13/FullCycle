@@ -352,7 +352,7 @@ describe('Place order use case unit tests', () => {
             }).rejects.toThrow(productError);
         });
 
-        it('Should throw an error when payment was denied', async () => {
+        it('Should throw an error when payment is denied', async () => {
             const productError = 'It was not possible to process the payment';
 
             expect(async () => {
