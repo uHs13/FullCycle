@@ -1,5 +1,3 @@
-import ItemsTotalCalculatorService from "../../domain/service/items.total.calculator.service";
-
 export interface GenerateInvoiceFacadeInputDtoInterface {
     name: string;
     document: string;
@@ -14,7 +12,6 @@ export interface GenerateInvoiceFacadeInputDtoInterface {
         name: string;
         price: number;
     }[];
-    calculatorService: ItemsTotalCalculatorService
 }
 
 export interface GenerateInvoiceFacadeOutputDtoInterface {

@@ -1,8 +1,5 @@
-import ItemsTotalCalculatorService from "../../domain/service/items.total.calculator.service";
-
 export interface FindInvoiceFacadeInputDtoInterface {
     id: string;
-    calculatorService: ItemsTotalCalculatorService
 }
 
 export interface FindInvoiceFacadeOutputDtoInterface {

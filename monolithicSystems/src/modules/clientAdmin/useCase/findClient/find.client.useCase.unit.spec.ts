@@ -4,15 +4,27 @@ import FindClientUseCase from "./find.client.useCase";
 
 describe('Find Client use case unit test', () => {
     const uuid = new Uuid();
-    const name = 'name';
-    const email = 'email@email.com';
-    const address = 'address';
+        const name = 'name';
+        const document = 'document';
+        const email = 'email@email.com';
+        const street = 'street';
+        const number = 'number';
+        const complement = 'complement';
+        const city = 'city';
+        const state = 'state';
+        const zipCode = 'zipCode';
 
     const clientMock = new ClientEntity({
         id: uuid,
         name: name,
+        document: document,
         email: email,
-        address: address
+        street: street,
+        number: number,
+        complement: complement,
+        city: city,
+        state: state,
+        zipCode: zipCode,
     });
 
     const mockRepository = () => {
@@ -36,6 +48,11 @@ describe('Find Client use case unit test', () => {
         expect(output.id).toEqual(uuid.value);
         expect(output.name).toEqual(name);
         expect(output.email).toEqual(email);
-        expect(output.address).toEqual(address);
+        expect(output.street).toEqual(street);
+        expect(output.number).toEqual(number);
+        expect(output.complement).toEqual(complement);
+        expect(output.city).toEqual(city);
+        expect(output.state).toEqual(state);
+        expect(output.zipCode).toEqual(zipCode);
     });
 });

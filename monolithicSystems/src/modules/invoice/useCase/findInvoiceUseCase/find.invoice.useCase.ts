@@ -1,5 +1,5 @@
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
-import Item from "../../domain/item";
+import ItemsTotalCalculatorService from "../../domain/service/items.total.calculator.service";
 import GatewayInterface from "../../gateway/invoice.gateway.interface";
 import { FindInvoiceUseCaseInputDto, FindInvoiceUseCaseOutputDto } from "./find.invoice.useCase.dto";
 
@@ -26,7 +26,7 @@ export default class FindInvoiceUseCase implements UseCaseInterface {
                     state: foundInvoice.address.state,
                     zipCode: foundInvoice.address.zipCode,
                 },
-                total: input.calculatorService.calculateTotal(foundInvoice.items),
+                total: (new ItemsTotalCalculatorService()).calculateTotal(foundInvoice.items),
                 createdAt: foundInvoice.createdAt,
                 items: foundInvoice.items.map((item) => ({
                     id: item.id.value,

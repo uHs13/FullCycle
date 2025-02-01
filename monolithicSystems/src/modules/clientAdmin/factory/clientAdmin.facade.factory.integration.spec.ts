@@ -25,34 +25,64 @@ describe('Client admin facade integration tests', () => {
         const facade = new ClientAdminFacadeFactory().make();
 
         const name = 'name';
+        const document = 'document';
         const email = 'email';
-        const address = 'address';
+        const street = 'street';
+        const number = 'number';
+        const complement = 'complement';
+        const city = 'city';
+        const state = 'state';
+        const zipCode = 'zipCode';
 
         const input = {
             name: name,
+            document: document,
             email: email,
-            address: address
+            street: street,
+            number: number,
+            complement: complement,
+            city: city,
+            state: state,
+            zipCode: zipCode,
         };
 
         const output = await facade.add(input);
 
         expect(output.id).toBeDefined();
         expect(output.name).toEqual(name);
+        expect(output.document).toEqual(document);
         expect(output.email).toEqual(email);
-        expect(output.address).toEqual(address);
+        expect(output.street).toEqual(street);
+        expect(output.number).toEqual(number);
+        expect(output.complement).toEqual(complement);
+        expect(output.city).toEqual(city);
+        expect(output.state).toEqual(state);
+        expect(output.zipCode).toEqual(zipCode);
     });
 
     it('Should properly find a client', async () => {
         const facade = new ClientAdminFacadeFactory().make();
 
         const name = 'name';
+        const document = 'document';
         const email = 'email';
-        const address = 'address';
+        const street = 'street';
+        const number = 'number';
+        const complement = 'complement';
+        const city = 'city';
+        const state = 'state';
+        const zipCode = 'zipCode';
 
         const input = {
             name: name,
+            document: document,
             email: email,
-            address: address
+            street: street,
+            number: number,
+            complement: complement,
+            city: city,
+            state: state,
+            zipCode: zipCode,
         };
 
         const createdClient = await facade.add(input);
@@ -60,8 +90,14 @@ describe('Client admin facade integration tests', () => {
         const output = await facade.find({id: createdClient.id});
 
         expect(output.id).toEqual(createdClient.id);
-        expect(output.name).toEqual(createdClient.name);
-        expect(output.email).toEqual(createdClient.email);
-        expect(output.address).toEqual(createdClient.address);
+        expect(output.name).toEqual(name);
+        expect(output.document).toEqual(document);
+        expect(output.email).toEqual(email);
+        expect(output.street).toEqual(street);
+        expect(output.number).toEqual(number);
+        expect(output.complement).toEqual(complement);
+        expect(output.city).toEqual(city);
+        expect(output.state).toEqual(state);
+        expect(output.zipCode).toEqual(zipCode);
     });
 });

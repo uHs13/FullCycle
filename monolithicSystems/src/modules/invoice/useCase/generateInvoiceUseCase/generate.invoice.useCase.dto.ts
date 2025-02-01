@@ -14,7 +14,6 @@ export interface GenerateInvoiceUseCaseInputDto {
         name: string;
         price: number;
     }[];
-    calculatorService: ItemsTotalCalculatorService
 }
 
 export interface GenerateInvoiceUseCaseOutputDto {

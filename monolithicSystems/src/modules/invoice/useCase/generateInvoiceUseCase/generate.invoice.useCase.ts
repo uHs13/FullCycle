@@ -2,6 +2,7 @@ import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
 import Invoice from "../../domain/invoice";
 import Item from "../../domain/item";
+import ItemsTotalCalculatorService from "../../domain/service/items.total.calculator.service";
 import AddressValueObject from "../../domain/valueObject/address.value.object";
 import GatewayInterface from "../../gateway/invoice.gateway.interface";
 import { GenerateInvoiceUseCaseInputDto, GenerateInvoiceUseCaseOutputDto } from "./generate.invoice.useCase.dto";
@@ -29,7 +30,7 @@ export default class GenerateInvoiceUseCase implements UseCaseInterface {
                 city: generatedInvoice.address.city,
                 state: generatedInvoice.address.state,
                 zipCode: generatedInvoice.address.zipCode,
-                total: input.calculatorService.calculateTotal(generatedInvoice.items),
+                total: (new ItemsTotalCalculatorService()).calculateTotal(generatedInvoice.items),
                 items: generatedInvoice.items.map((item) => ({
                     id: item.id.value,
                     name: item.name,

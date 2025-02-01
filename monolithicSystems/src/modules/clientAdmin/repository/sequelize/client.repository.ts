@@ -9,8 +9,14 @@ export default class ClientRepository implements ClientGatewayInterface {
             await ClientModel.create({
                 id: client.id.value,
                 name: client.name,
+                document: client.document,
                 email: client.email,
-                address: client.address,
+                street: client.street,
+                number: client.number,
+                complement: client.complement,
+                city: client.city,
+                state: client.state,
+                zipCode: client.zipCode,
             });
 
             return client;
@@ -26,8 +32,14 @@ export default class ClientRepository implements ClientGatewayInterface {
             return new ClientEntity({
                 id: new Uuid(foundClient.id),
                 name: foundClient.name,
+                document: foundClient.document,
                 email: foundClient.email,
-                address: foundClient.address,
+                street: foundClient.street,
+                number: foundClient.number,
+                complement: foundClient.complement,
+                city: foundClient.city,
+                state: foundClient.state,
+                zipCode: foundClient.zipCode,
             })
         } catch (error) {
             throw new Error('Was not possible to find the client');

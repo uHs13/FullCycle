@@ -28,22 +28,40 @@ describe('Client repository integration tests', () => {
 
         const uuid = new Uuid();
         const name = 'name';
+        const document = 'document';
         const email = 'email';
-        const address = 'address';
+        const street = 'street';
+        const number = 'number';
+        const complement = 'complement';
+        const city = 'city';
+        const state = 'state';
+        const zipCode = 'zipCode';
 
         const client = new ClientEntity({
             id: uuid,
             name: name,
+            document: document,
             email: email,
-            address: address
+            street: street,
+            number: number,
+            complement: complement,
+            city: city,
+            state: state,
+            zipCode: zipCode,
         });
 
         const output = await clientRepository.add(client);
 
         expect(output.id.value).toEqual(uuid.value);
         expect(output.name).toEqual(name);
+        expect(output.document).toEqual(document);
         expect(output.email).toEqual(email);
-        expect(output.address).toEqual(address);
+        expect(output.street).toEqual(street);
+        expect(output.number).toEqual(number);
+        expect(output.complement).toEqual(complement);
+        expect(output.city).toEqual(city);
+        expect(output.state).toEqual(state);
+        expect(output.zipCode).toEqual(zipCode);
     });
 
     it('Should properly find a client', async () => {
@@ -51,14 +69,26 @@ describe('Client repository integration tests', () => {
 
         const uuid = new Uuid();
         const name = 'name';
+        const document = 'document';
         const email = 'email';
-        const address = 'address';
+        const street = 'street';
+        const number = 'number';
+        const complement = 'complement';
+        const city = 'city';
+        const state = 'state';
+        const zipCode = 'zipCode';
 
         const client = new ClientEntity({
             id: uuid,
             name: name,
+            document: document,
             email: email,
-            address: address
+            street: street,
+            number: number,
+            complement: complement,
+            city: city,
+            state: state,
+            zipCode: zipCode,
         });
 
         await clientRepository.add(client);
@@ -67,7 +97,13 @@ describe('Client repository integration tests', () => {
 
         expect(foundClient.id.value).toEqual(uuid.value);
         expect(foundClient.name).toEqual(name);
+        expect(foundClient.document).toEqual(document);
         expect(foundClient.email).toEqual(email);
-        expect(foundClient.address).toEqual(address);
+        expect(foundClient.street).toEqual(street);
+        expect(foundClient.number).toEqual(number);
+        expect(foundClient.complement).toEqual(complement);
+        expect(foundClient.city).toEqual(city);
+        expect(foundClient.state).toEqual(state);
+        expect(foundClient.zipCode).toEqual(zipCode);
     });
 });

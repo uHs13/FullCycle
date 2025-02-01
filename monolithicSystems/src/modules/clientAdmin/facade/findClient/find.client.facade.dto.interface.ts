@@ -5,6 +5,12 @@ export interface FindClientFacadeInputDtoInterface {
 export interface FindClientFacadeOutputDtoInterface {
     id: string,
     name: string,
+    document: string;
     email: string,
-    address: string,
+    street: string;
+    number: string;
+    complement: string;
+    city: string;
+    state: string;
+    zipCode: string;
 }

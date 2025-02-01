@@ -8,8 +8,14 @@ describe('Order entity unit tests', () => {
         const client = new Client({
             id: new Uuid(),
             name: 'name',
+            document: 'document',
             email: 'email',
-            address: 'address'            
+            street: 'street',       
+            number: 'number',       
+            complement: 'complement',       
+            city: 'city',       
+            state: 'state',       
+            zipCode: 'zipCode',       
         });
 
         const productOne = new Product({
@@ -41,8 +47,14 @@ describe('Order entity unit tests', () => {
         const client = new Client({
             id: new Uuid(),
             name: 'name',
+            document: 'document',
             email: 'email',
-            address: 'address'            
+            street: 'street',       
+            number: 'number',       
+            complement: 'complement',       
+            city: 'city',       
+            state: 'state',       
+            zipCode: 'zipCode',            
         });
 
         const productOne = new Product({

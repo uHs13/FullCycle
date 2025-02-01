@@ -56,7 +56,7 @@ describe('Invoice facade integration tests', () => {
                 name: itemName,
                 price: itemPrice,
             }],
-            calculatorService: new ItemsTotalCalculatorService()
+
         }
 
         const invoiceRepository = new InvoiceRepository();
@@ -115,7 +115,7 @@ describe('Invoice facade integration tests', () => {
                 name: itemName,
                 price: itemPrice,
             }],
-            calculatorService: new ItemsTotalCalculatorService()
+
         }
 
         const invoiceRepository = new InvoiceRepository();
@@ -131,7 +131,7 @@ describe('Invoice facade integration tests', () => {
 
         const findInput = {
             id: createdInvoice.id,
-            calculatorService: new ItemsTotalCalculatorService()
+
         };
 
         const output = await facade.find(findInput);

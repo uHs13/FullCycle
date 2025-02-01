@@ -1,12 +1,15 @@
 import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
 import { ClientAdminFacadeInterface } from "../../../clientAdmin/facade/clientAdmin.facade.interface";
+import InvoiceFacade from "../../../invoice/facade/invoice.facade";
+import InvoiceFacadeInterface from "../../../invoice/facade/invoice.facade.interface";
 import PaymentFacadeInterface from "../../../payment/facade/payment.facade.interface";
 import ProductAdminFacadeInterface from "../../../productAdmin/facade/productAdmin.facade.interface";
 import StoreCatalogFacadeInterface from "../../../storeCatalog/facade/storeCatalog.facade.interface";
 import Client from "../../domain/client.entity";
 import OrderEntity from "../../domain/order.entity";
 import Product from "../../domain/product.entity";
+import CheckoutGatewayInterface from "../../gateway/checkout.gateway.interface";
 import { PlaceOrderInputDto, PlaceOrderOutputDto } from "./placeOrder.dto";
 
 type PlaceOrderUseCaseProperties = {
@@ -14,6 +17,8 @@ type PlaceOrderUseCaseProperties = {
     productAdminFacade: ProductAdminFacadeInterface,
     storeCatalogFacade: StoreCatalogFacadeInterface,
     paymentFacade: PaymentFacadeInterface,
+    invoiceFacade: InvoiceFacadeInterface,
+    repository: CheckoutGatewayInterface,
 }
 
 export default class PlaceOrderUseCase implements UseCaseInterface {
@@ -21,11 +26,13 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
     private productAdminFacade: ProductAdminFacadeInterface;
     private storeCatalogFacade: StoreCatalogFacadeInterface;
     private paymentFacade: PaymentFacadeInterface;
+    private invoiceFacade: InvoiceFacadeInterface;
 
     private input: PlaceOrderInputDto;
     private client: Client;
     private products: Product[] = [];
     private order: OrderEntity;
+    private repository: CheckoutGatewayInterface;
 
     private clientNotFoundError: string = 'Client not found';
     private invalidProductIdError: string = 'Invalid product id';
@@ -41,6 +48,8 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         this.productAdminFacade = input.productAdminFacade;
         this.storeCatalogFacade = input.storeCatalogFacade;
         this.paymentFacade = input.paymentFacade;
+        this.invoiceFacade = input.invoiceFacade;
+        this.repository = input.repository;
     }
 
     async execute(input: PlaceOrderInputDto): Promise<PlaceOrderOutputDto> {
@@ -75,8 +84,14 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
 
             this.client = new Client({
                 name: clientProperties.name,
+                document: clientProperties.document,
                 email: clientProperties.email,
-                address: clientProperties.address,
+                street: clientProperties.street,
+                number: clientProperties.number,
+                complement: clientProperties.complement,
+                city: clientProperties.city,
+                state: clientProperties.state,
+                zipCode: clientProperties.zipCode,
             });
         } catch (error) {
             throw error;

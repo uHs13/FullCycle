@@ -16,8 +16,14 @@ export default class FindClientUseCase implements UseCaseInterface {
             return {
                 id: foundClient.id.value,
                 name: foundClient.name,
+                document: foundClient.document,
                 email: foundClient.email,
-                address: foundClient.address
+                street: foundClient.street,
+                number: foundClient.number,
+                complement: foundClient.complement,
+                city: foundClient.city,
+                state: foundClient.state,
+                zipCode: foundClient.zipCode,
             };
         } catch (error) {
             throw new Error('Was not possible to find the client');

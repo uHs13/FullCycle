@@ -31,11 +31,27 @@ describe('Place order use case unit tests', () => {
                 }
             };
 
+            const mockInvoiceFacade = () => {
+                return {
+                    generate: jest.fn(),
+                    find: jest.fn(),
+                }
+            }
+
+            const mockRepository = () => {
+                return {
+                    addOrder: jest.fn(),
+                    findOrder: jest.fn(),
+                }
+            }
+
             const useCaseProperties = {
                 clientAdminFacade: mockClientAdminFacade(),
                 productAdminFacade: mockProductAdminFacade(),
                 storeCatalogFacade: mockStoreCatalogFacade(),
                 paymentFacade: mockPaymentFacade(),
+                invoiceFacade: mockInvoiceFacade(),
+                repository: mockRepository(),
             };
 
             const useCaseInput = {
@@ -88,11 +104,27 @@ describe('Place order use case unit tests', () => {
                 }
             };
 
+            const mockInvoiceFacade = () => {
+                return {
+                    generate: jest.fn(),
+                    find: jest.fn(),
+                }
+            }
+
+            const mockRepository = () => {
+                return {
+                    addOrder: jest.fn(),
+                    findOrder: jest.fn(),
+                }
+            }
+
             const useCaseProperties = {
                 clientAdminFacade: mockClientAdminFacade(),
                 productAdminFacade: mockProductAdminFacade(),
                 storeCatalogFacade: mockStoreCatalogFacade(),
                 paymentFacade: mockPaymentFacade(),
+                invoiceFacade: mockInvoiceFacade(),
+                repository: mockRepository(),
             };
 
             const useCaseInput = {
@@ -149,11 +181,27 @@ describe('Place order use case unit tests', () => {
                     }
                 };
 
+                const mockInvoiceFacade = () => {
+                    return {
+                        generate: jest.fn(),
+                        find: jest.fn(),
+                    }
+                }
+    
+                const mockRepository = () => {
+                    return {
+                        addOrder: jest.fn(),
+                        findOrder: jest.fn(),
+                    }
+                }
+    
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
                     productAdminFacade: mockProductAdminFacade(),
                     storeCatalogFacade: mockStoreCatalogFacade(),
                     paymentFacade: mockPaymentFacade(),
+                    invoiceFacade: mockInvoiceFacade(),
+                    repository: mockRepository(),
                 };
 
                 const useCaseInput = {
@@ -204,11 +252,27 @@ describe('Place order use case unit tests', () => {
                     }
                 };
 
+                const mockInvoiceFacade = () => {
+                    return {
+                        generate: jest.fn(),
+                        find: jest.fn(),
+                    }
+                }
+    
+                const mockRepository = () => {
+                    return {
+                        addOrder: jest.fn(),
+                        findOrder: jest.fn(),
+                    }
+                }
+    
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
                     productAdminFacade: mockProductAdminFacade(),
                     storeCatalogFacade: mockStoreCatalogFacade(),
                     paymentFacade: mockPaymentFacade(),
+                    invoiceFacade: mockInvoiceFacade(),
+                    repository: mockRepository(),
                 };
 
                 const useCaseInput = {
@@ -265,11 +329,27 @@ describe('Place order use case unit tests', () => {
                     }
                 };
 
+                const mockInvoiceFacade = () => {
+                    return {
+                        generate: jest.fn(),
+                        find: jest.fn(),
+                    }
+                }
+    
+                const mockRepository = () => {
+                    return {
+                        addOrder: jest.fn(),
+                        findOrder: jest.fn(),
+                    }
+                }
+    
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
                     productAdminFacade: mockProductAdminFacade(),
                     storeCatalogFacade: mockStoreCatalogFacade(),
                     paymentFacade: mockPaymentFacade(),
+                    invoiceFacade: mockInvoiceFacade(),
+                    repository: mockRepository(),
                 };
 
                 const useCaseInput = {
@@ -331,11 +411,27 @@ describe('Place order use case unit tests', () => {
                     }
                 };
 
+                const mockInvoiceFacade = () => {
+                    return {
+                        generate: jest.fn(),
+                        find: jest.fn(),
+                    }
+                }
+    
+                const mockRepository = () => {
+                    return {
+                        addOrder: jest.fn(),
+                        findOrder: jest.fn(),
+                    }
+                }
+    
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
                     productAdminFacade: mockProductAdminFacade(),
                     storeCatalogFacade: mockStoreCatalogFacade(),
                     paymentFacade: mockPaymentFacade(),
+                    invoiceFacade: mockInvoiceFacade(),
+                    repository: mockRepository(),
                 };
 
                 const useCaseInput = {
@@ -400,11 +496,27 @@ describe('Place order use case unit tests', () => {
                     }
                 };
 
+                const mockInvoiceFacade = () => {
+                    return {
+                        generate: jest.fn(),
+                        find: jest.fn(),
+                    }
+                }
+    
+                const mockRepository = () => {
+                    return {
+                        addOrder: jest.fn(),
+                        findOrder: jest.fn(),
+                    }
+                }
+    
                 const useCaseProperties = {
                     clientAdminFacade: mockClientAdminFacade(),
                     productAdminFacade: mockProductAdminFacade(),
                     storeCatalogFacade: mockStoreCatalogFacade(),
                     paymentFacade: mockPaymentFacade(),
+                    invoiceFacade: mockInvoiceFacade(),
+                    repository: mockRepository(),
                 };
 
                 const useCaseInput = {

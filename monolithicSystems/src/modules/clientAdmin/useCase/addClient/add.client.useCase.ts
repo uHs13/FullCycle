@@ -16,8 +16,14 @@ export default class AddClientUseCase implements UseCaseInterface {
             const client = new ClientEntity({
                 id: new Uuid(),
                 name: input.name,
+                document: input.document,
                 email: input.email,
-                address: input.address,
+                street: input.street,
+                number: input.number,
+                complement: input.complement,
+                city: input.city,
+                state: input.state,
+                zipCode: input.zipCode,
             });
 
             const addedClient = await this.clientRepository.add(client);
@@ -25,8 +31,14 @@ export default class AddClientUseCase implements UseCaseInterface {
             return {
                 id: addedClient.id.value,
                 name: addedClient.name,
+                document: addedClient.document,
                 email: addedClient.email,
-                address: addedClient.address
+                street: addedClient.street,
+                number: addedClient.number,
+                complement: addedClient.complement,
+                city: addedClient.city,
+                state: addedClient.state,
+                zipCode: addedClient.zipCode,
             };
         } catch (error) {
             throw new Error('Was not possible to add the client');
