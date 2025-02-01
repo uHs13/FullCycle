@@ -1,7 +1,6 @@
 import Uuid from "../../../@shared/domain/valueObject/uuid.value.object";
 import UseCaseInterface from "../../../@shared/useCase/useCase.interface";
 import { ClientAdminFacadeInterface } from "../../../clientAdmin/facade/clientAdmin.facade.interface";
-import InvoiceFacade from "../../../invoice/facade/invoice.facade";
 import InvoiceFacadeInterface from "../../../invoice/facade/invoice.facade.interface";
 import PaymentFacadeInterface from "../../../payment/facade/payment.facade.interface";
 import ProductAdminFacadeInterface from "../../../productAdmin/facade/productAdmin.facade.interface";
@@ -61,13 +60,17 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
             await this.loadProducts();
             this.createOrder();
             await this.processPayment();
+            await this.generateInvoice();
+            await this.persistOrder();
 
             return {
-                id: '',
-                invoiceId: '',
-                status: '',
-                total: 0,
-                products: []
+                id: this.order.id.value,
+                invoiceId: this.order.invoiceId,
+                status: this.order.status,
+                total: this.order.calculateTotal(),
+                products: this.order.products.map((product) => ({
+                    productId: product.id.value
+                }))
             }
         } catch (error) {
             throw error;
@@ -157,5 +160,31 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
         if (processedPayment.status === this.deniedPaymentStatus) {
             throw new Error(this.deniedPaymentError);
         }
+
+        this.order.approve();
+    }
+
+    private async generateInvoice(): Promise<void> {
+        const generatedInvoice = await this.invoiceFacade.generate({
+            name: this.client.name,
+            document: this.client.document,
+            street: this.client.street,
+            number: this.client.number,
+            complement: this.client.complement,
+            city: this.client.city,
+            state: this.client.state,
+            zipCode: this.client.zipCode,
+            items: this.products.map((product) => ({
+                id: product.id.value,
+                name: product.name,
+                price: product.purchasePrice,
+            }))
+        });
+
+        this.order.defineInvoiceId(generatedInvoice.id);
+    }
+
+    private async persistOrder(): Promise<void> {
+        await this.repository.addOrder(this.order);
     }
 }

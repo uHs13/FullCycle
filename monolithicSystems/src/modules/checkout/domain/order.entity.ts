@@ -6,8 +6,8 @@ import Product from "./product.entity";
 
 type OrderProperties = {
     id: Uuid;
-    client: Client;
-    products: Product[];
+    client?: Client;
+    products?: Product[];
     status?: string;
 }
 
@@ -15,9 +15,10 @@ export default class OrderEntity extends BaseEntity implements AggregateRootInte
     private pendingStatus = 'pending';
     private approvedStatus = 'approved';
 
-    private _client: Client;
-    private _products: Product[];
+    private _client?: Client;
+    private _products?: Product[];
     private _status: string;
+    private _invoiceId: string;
 
     constructor(input: OrderProperties) {
         super(input.id);
@@ -39,6 +40,10 @@ export default class OrderEntity extends BaseEntity implements AggregateRootInte
         return this._status;
     }
 
+    get invoiceId(): string {
+        return this._invoiceId;
+    }
+
     approve(): void {
         this._status = this.approvedStatus;
     }
@@ -47,5 +52,9 @@ export default class OrderEntity extends BaseEntity implements AggregateRootInte
         return this._products.reduce((total, current) => {
             return total + current.purchasePrice;
         }, 0);
+    }
+
+    defineInvoiceId(invoiceId: string): void {
+        this._invoiceId = invoiceId;
     }
 }
