@@ -27,5 +27,5 @@ export default class ItemModel extends Model {
     declare invoiceId: string
 
     @BelongsTo(() => InvoiceModel)
-    declare invoice: InvoiceModel
+    declare invoice: string
 }

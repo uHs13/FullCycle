@@ -7,4 +7,6 @@ export const httpStatusCodes = {
 export const routeGroups = {
     client: "/client",
     product: "/product",
+    checkout: "/checkout",
+    invoice: "/invoice",
 }

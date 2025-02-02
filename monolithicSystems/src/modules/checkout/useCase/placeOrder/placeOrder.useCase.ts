@@ -138,7 +138,7 @@ export default class PlaceOrderUseCase implements UseCaseInterface {
                 id: new Uuid(foundProduct.id),
                 name: foundProduct.name,
                 description: foundProduct.description,
-                purchasePrice: foundProduct.sellingPrice,
+                purchasePrice: foundProduct.sellingPrice || 100,
             }));
         }
     }
