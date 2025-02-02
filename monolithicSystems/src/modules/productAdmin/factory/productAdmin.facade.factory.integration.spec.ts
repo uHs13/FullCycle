@@ -47,4 +47,28 @@ describe('Product Admin factory integration tests', () => {
         expect(foundProduct.purchasePrice).toEqual(facadeInput.purchasePrice);
         expect(foundProduct.stockAmount).toEqual(facadeInput.stockAmount);
     });
+
+    it('should properly check the stock amount of a product using factory', async () => {
+            const productFacade = (new ProductAdminFacadeFactory()).make();
+
+            const name = 'product';
+            const description = 'description';
+            const purchasePrice = 13;
+            const stockAmount = 13;
+
+            const facadeInput = {
+                name: name,
+                description: description,
+                purchasePrice: purchasePrice,
+                stockAmount: stockAmount
+            }
+
+            const createdProduct = await productFacade.addProduct(facadeInput);
+
+            const foundProduct = await productFacade.checkProductStockAmount({id: createdProduct.id});
+
+            expect(foundProduct).toBeDefined();
+            expect(foundProduct.id).toEqual(createdProduct.id);
+            expect(foundProduct.stockAmount).toEqual(facadeInput.stockAmount);
+        });
 });
