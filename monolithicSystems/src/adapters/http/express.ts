@@ -7,11 +7,13 @@ import ClientModel from "../../modules/clientAdmin/repository/sequelize/client.m
 import { migrator } from "../../migration/config/migrator";
 import { routeGroups } from "./routes/routes";
 import { productRouter } from "./routes/product/product.routes";
+import { clientRouter } from "./routes/client/client.routes";
 
 export const app: Express = express();
 app.use(express.json());
 
 app.use(routeGroups.product, productRouter);
+app.use(routeGroups.client, clientRouter);
 
 export let sequelize: Sequelize;
 
@@ -29,6 +31,7 @@ export async function createConnection() {
         migration = migrator(sequelize)
 
         await migration.up()
+        await sequelize.sync()
     } catch (error) {
         if (error instanceof Error) {
             throw error;

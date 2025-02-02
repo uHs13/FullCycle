@@ -21,7 +21,7 @@ export default class ClientRepository implements ClientGatewayInterface {
 
             return client;
         } catch (error) {
-            throw new Error('Was not possible to add the client')
+            throw new Error('Was not possible to add the client');
         }
     }
 

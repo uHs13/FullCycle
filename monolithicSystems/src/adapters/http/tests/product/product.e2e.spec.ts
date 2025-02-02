@@ -67,7 +67,7 @@ describe('Product endpoints end to end tests', () => {
         expect(response.body.stockAmount).toEqual(response.body.stockAmount);
     });
 
-    it('Should properly get a product', async () => {
+    it('Should properly find a product', async () => {
         const name = 'Black and White T-shirt';
         const description = 'Light and beauty T-shirt';
         const purchasePrice = 13;
@@ -98,7 +98,7 @@ describe('Product endpoints end to end tests', () => {
         expect(response.body.description).toEqual(response.body.description);
     });
 
-    it('Should properly get all products', async () => {
+    it('Should properly find all products', async () => {
         const name = 'Black and White T-shirt';
         const description = 'Light and beauty T-shirt';
         const purchasePrice = 13;
