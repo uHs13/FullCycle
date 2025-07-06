@@ -35,14 +35,14 @@ func NewAccount(client *domainClient.Client) (*Account, error) {
 		CreatedAt: time.Now(),
 	}
 
-	if err := account.Validate(); err != nil {
+	if err := account.validate(); err != nil {
 		return nil, err
 	}
 
 	return account, nil
 }
 
-func (account *Account) Validate() error {
+func (account *Account) validate() error {
 	if err := account.Client.Validate(); err != nil {
 		return err
 	}

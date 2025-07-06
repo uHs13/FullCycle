@@ -20,7 +20,7 @@ services:
     depends_on:
       - db
   golang:
-    container_name: golang_products
+    container_name: golang_microservices
     build: .
     ports:
       - 3000:3000
