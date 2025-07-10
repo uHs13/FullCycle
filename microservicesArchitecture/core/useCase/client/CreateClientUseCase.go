@@ -1,9 +1,14 @@
 package useCaseClient
 
 import (
+	"errors"
 	domainClient "microservices-wallet-core/core/domain/client"
 	portClient "microservices-wallet-core/core/port/client"
 	"time"
+)
+
+const (
+	notPossibleToCreateClientErrorMessage = "was not possible to create the client"
 )
 
 type CreateClientUseCaseInput struct {
@@ -38,7 +43,7 @@ func (useCase *CreateClientUseCase) Execute(input CreateClientUseCaseInput) (*Cr
 	}
 
 	if err := useCase.persistence.Create(client); err != nil {
-		return nil, err
+		return nil, errors.New(notPossibleToCreateClientErrorMessage)
 	}
 
 	return &CreateClientUseCaseOutput{

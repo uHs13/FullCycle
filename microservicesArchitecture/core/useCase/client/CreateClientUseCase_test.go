@@ -74,3 +74,25 @@ func TestShouldThrowAnErrorWhenTryToCreateAnClientWithInvalidEmail(t *testing.T)
 	assert.Nil(t, output)
 	assert.Equal(t, err.Error(), "the email must contain at least one letter")
 }
+
+func TestShouldThrowAnErrorWhenWasNotPossibleToCreateTheClient(t *testing.T) {
+	clientName := "John Cena"
+	clientEmail := "john.cena@email.com"
+
+	input := useCaseClient.CreateClientUseCaseInput{
+		Name:  clientName,
+		Email: clientEmail,
+	}
+
+	dataSchema := infraDataSchema.NewDatabaseMemorySchema()
+	persistenceMemory := persistenceClient.NewClientPersistenceMemory(dataSchema)
+	persistenceMemory.DefineForceError(true)
+
+	useCase := useCaseClient.NewCreateClientUseCase(persistenceMemory)
+
+	output, err := useCase.Execute(input)
+
+	assert.NotNil(t, err)
+	assert.Nil(t, output)
+	assert.Equal(t, err.Error(), "was not possible to create the client")
+}
