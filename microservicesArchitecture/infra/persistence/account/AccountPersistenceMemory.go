@@ -3,6 +3,7 @@ package persistenceAccount
 import (
 	"errors"
 	domainAccount "microservices-wallet-core/core/domain/account"
+	domainClient "microservices-wallet-core/core/domain/client"
 	"microservices-wallet-core/core/domain/valueObject"
 	infraDataSchema "microservices-wallet-core/infra/dataSchema"
 )
@@ -12,8 +13,9 @@ const (
 )
 
 type AccountPersistenceMemory struct {
-	DataSchema infraDataSchema.DataSchemaInterfaceInterface
-	forceError bool
+	DataSchema  infraDataSchema.DataSchemaInterfaceInterface
+	forceError  bool
+	withBalance bool
 }
 
 func NewAccountPersistenceMemory(dataSchema infraDataSchema.DataSchemaInterfaceInterface) *AccountPersistenceMemory {
@@ -24,10 +26,17 @@ func NewAccountPersistenceMemory(dataSchema infraDataSchema.DataSchemaInterfaceI
 
 func (persistence *AccountPersistenceMemory) FindById(uuid valueObject.UuidValueObject) (*domainAccount.Account, error) {
 	if persistence.forceError {
-		return nil, nil
+		return nil, errors.New(mockErrorMessage)
 	}
 
-	return nil, nil
+	mockClient, _ := domainClient.NewClient("John Cena", "john.cena@email.com")
+	mockAccount, _ := domainAccount.NewAccount(mockClient)
+
+	if persistence.withBalance {
+		mockAccount.Credit(1000)
+	}
+
+	return mockAccount, nil
 }
 
 func (persistence *AccountPersistenceMemory) Create(account *domainAccount.Account) error {
@@ -40,4 +49,8 @@ func (persistence *AccountPersistenceMemory) Create(account *domainAccount.Accou
 
 func (persistence *AccountPersistenceMemory) DefineForceError(value bool) {
 	persistence.forceError = value
+}
+
+func (persistence *AccountPersistenceMemory) DefineWithBalance(value bool) {
+	persistence.withBalance = value
 }
