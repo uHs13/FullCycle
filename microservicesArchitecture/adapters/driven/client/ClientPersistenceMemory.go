@@ -1,4 +1,4 @@
-package persistenceClient
+package drivenAdapterClient
 
 import (
 	"errors"

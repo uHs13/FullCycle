@@ -1,4 +1,4 @@
-package persistenceAccount
+package drivenAdapterAccount
 
 import (
 	"errors"

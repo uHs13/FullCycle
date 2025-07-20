@@ -14,6 +14,18 @@ func NewUuidValueObject() *UuidValueObject {
 	}
 }
 
+func MakeFromString(value string) (*UuidValueObject, error) {
+	validator := uuid.NewUuidGenerator()
+
+	if err := validator.Validate(value); err != nil {
+		return nil, err
+	}
+
+	return &UuidValueObject{
+		value: value,
+	}, nil
+}
+
 func (uuid *UuidValueObject) GetValue() string {
 	return uuid.value
 }

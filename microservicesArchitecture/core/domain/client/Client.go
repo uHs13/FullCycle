@@ -60,3 +60,7 @@ func (client *Client) Update(name string, email string) error {
 
 	return nil
 }
+
+func (client *Client) DefineId(uuid valueObject.UuidValueObject) {
+	client.Id = uuid
+}

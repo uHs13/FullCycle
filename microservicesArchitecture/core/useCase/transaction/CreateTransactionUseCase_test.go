@@ -1,12 +1,12 @@
 package useCaseTransaction_test
 
 import (
+	persistenceAccount "microservices-wallet-core/adapters/driven/account"
+	persistenceTransaction "microservices-wallet-core/adapters/driven/transaction"
 	domainAccount "microservices-wallet-core/core/domain/account"
 	domainClient "microservices-wallet-core/core/domain/client"
 	useCaseTransaction "microservices-wallet-core/core/useCase/transaction"
 	infraDataSchema "microservices-wallet-core/infra/dataSchema"
-	persistenceAccount "microservices-wallet-core/infra/persistence/account"
-	persistenceTransaction "microservices-wallet-core/infra/persistence/transaction"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

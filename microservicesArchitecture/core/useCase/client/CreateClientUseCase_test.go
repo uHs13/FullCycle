@@ -1,9 +1,9 @@
 package useCaseClient_test
 
 import (
+	persistenceClient "microservices-wallet-core/adapters/driven/client"
 	useCaseClient "microservices-wallet-core/core/useCase/client"
 	infraDataSchema "microservices-wallet-core/infra/dataSchema"
-	persistenceClient "microservices-wallet-core/infra/persistence/client"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
