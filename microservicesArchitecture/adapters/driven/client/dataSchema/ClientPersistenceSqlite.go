@@ -1,32 +1,36 @@
 package drivenAdapterClientDataSchema
 
-import infraDataSchema "microservices-wallet-core/infra/dataSchema"
+import (
+	infraDataSchema "microservices-wallet-core/infra/dataSchema"
+
+	_ "github.com/mattn/go-sqlite3"
+)
 
 const (
-	findByIdQuery = "SELECT id, name, email, created_at FROM client WHERE id = ?"
-	createQuery   = "INSERT INTO client (id, name, email, created_at) VALUES (?, ?, ?, ?)"
+	findByIdQuery = "SELECT id, name, email FROM client WHERE id = ?"
+	createQuery   = "INSERT INTO client (id, name, email) VALUES (?, ?, ?)"
 )
 
 type ClientPersistenceSqlite struct {
-	database infraDataSchema.Database
+	Database *infraDataSchema.Database
 }
 
 func NewClientPersistenceSqlite() (*ClientPersistenceSqlite, error) {
-	database, err := infraDataSchema.NewDatabase("sqlite")
+	database, err := infraDataSchema.NewDatabase("sqlite3")
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &ClientPersistenceSqlite{
-		database: *database,
+		Database: database,
 	}, nil
 }
 
 func (persistence *ClientPersistenceSqlite) FindById(uuid string) (ClientDto, error) {
 	var clientDto ClientDto
 
-	statement, err := persistence.database.Connection.Prepare(findByIdQuery)
+	statement, err := persistence.Database.Connection.Prepare(findByIdQuery)
 
 	if err != nil {
 		return clientDto, err
@@ -36,7 +40,6 @@ func (persistence *ClientPersistenceSqlite) FindById(uuid string) (ClientDto, er
 		&clientDto.Id,
 		&clientDto.Name,
 		&clientDto.Email,
-		&clientDto.CreatedAt,
 	)
 
 	defer statement.Close()
@@ -49,7 +52,7 @@ func (persistence *ClientPersistenceSqlite) FindById(uuid string) (ClientDto, er
 }
 
 func (persistence *ClientPersistenceSqlite) Create(client ClientDto) error {
-	statement, err := persistence.database.Connection.Prepare(createQuery)
+	statement, err := persistence.Database.Connection.Prepare(createQuery)
 
 	if err != nil {
 		return err
@@ -59,7 +62,6 @@ func (persistence *ClientPersistenceSqlite) Create(client ClientDto) error {
 		client.Id,
 		client.Name,
 		client.Email,
-		client.CreatedAt,
 	)
 
 	defer statement.Close()
