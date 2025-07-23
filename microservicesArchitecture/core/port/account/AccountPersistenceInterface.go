@@ -7,5 +7,5 @@ import (
 
 type AccountPersistenceInterface interface {
 	FindById(uuid valueObject.UuidValueObject) (*domainAccount.Account, error)
-	Create(client *domainAccount.Account) error
+	Create(account *domainAccount.Account) error
 }
