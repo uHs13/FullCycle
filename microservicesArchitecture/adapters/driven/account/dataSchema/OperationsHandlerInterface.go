@@ -1,6 +1,6 @@
 package drivenAdapterAccountDataSchema
 
-type AccountPersistenceInterface interface {
+type OperationsHandlerInterface interface {
 	FindById(uuid string) (*AccountDto, error)
 	Create(account *AccountDto) error
 }
