@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: goserver-configmap
+data:
+  NAME: "John Cena Three"
+  COLOR: "Orange Three"
