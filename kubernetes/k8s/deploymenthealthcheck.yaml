@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: goserver-fruits
+  name: goserver-healthcheck
   labels:
     app: goserver
 spec:
@@ -17,10 +17,21 @@ spec:
     spec:
       containers:
       - name: goserver
-        image: uhs13/publickubernetesenv:v2
+        image: uhs13/publickuberneteshealthcheck:latest
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 3
+          timeoutSeconds: 1
+          successThreshold: 1
         envFrom:
           - configMapRef:
               name: goserver-configmap
+          - secretRef:
+              name: goserver-secret
         volumeMounts:
         - mountPath: "/go/fruits"
           name: fruits

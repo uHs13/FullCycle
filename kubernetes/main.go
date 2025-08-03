@@ -6,13 +6,17 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"time"
 )
+
+var startedAt = time.Now()
 
 func main() {
 	http.HandleFunc("/", HelloWorld)
 	http.HandleFunc("/env", EnvConfig)
 	http.HandleFunc("/fruits", Fruits)
 	http.HandleFunc("/secret", Secret)
+	http.HandleFunc("/healthz", Healthz)
 
 	if err := http.ListenAndServe(":3000", nil); err != nil {
 		panic(err)
@@ -75,4 +79,16 @@ func Secret(w http.ResponseWriter, r *http.Request) {
 	`
 
 	fmt.Fprintf(w, html, userFromEnv, passwordFromEnv)
+}
+
+func Healthz(w http.ResponseWriter, r *http.Request) {
+	duration := time.Since(startedAt)
+
+	if duration.Seconds() < 10 {
+		w.WriteHeader(500)
+		w.Write([]byte(fmt.Sprintf("Duration: %f", duration.Seconds())))
+	} else {
+		w.WriteHeader(200)
+		w.Write([]byte("Ok"))
+	}
 }

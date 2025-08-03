@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goserver-healthcheck
+  labels:
+    app: goserver
+spec:
+  selector:
+    matchLabels:
+      app: goserver
+  replicas: 1
+  template:
+    metadata:
+      name: "goserver"
+      labels:
+        app: "goserver"
+    spec:
+      containers:
+      - name: goserver
+        image: uhs13/publickubernetesreadiness:latest
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 5
+          failureThreshold: 3
+          timeoutSeconds: 1
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 1
+          failureThreshold: 1
+          timeoutSeconds: 1
+          successThreshold: 1
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          periodSeconds: 2
+          failureThreshold: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+        envFrom:
+          - configMapRef:
+              name: goserver-configmap
+          - secretRef:
+              name: goserver-secret
+        volumeMounts:
+        - mountPath: "/go/fruits"
+          name: fruits
+      volumes:
+      - name: fruits
+        configMap:
+          name: configmapfruits
+          items:
+          - key: fruits
+            path: "fruits.txt"
