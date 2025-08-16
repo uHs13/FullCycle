@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goserver-fruits
+  labels:
+    app: goserver
+spec:
+  selector:
+    matchLabels:
+      app: goserver
+  replicas: 1
+  template:
+    metadata:
+      name: "goserver"
+      labels:
+        app: "goserver"
+    spec:
+      serviceAccount: server
+      containers:
+      - name: goserver
+        image: uhs13/publickubernetesenv:v2
+        envFrom:
+          - configMapRef:
+              name: goserver-configmap
+        volumeMounts:
+        - mountPath: "/go/fruits"
+          name: fruits
+        - mountPath: "/go/pvc"
+          name: goserver-pvc
+      volumes:
+      - name: goserver-pvc
+        persistentVolumeClaim:
+          claimName: goserver-pvc
+      - name: fruits
+        configMap:
+          name: configmapfruits
+          items:
+          - key: fruits
+            path: "fruits.txt"
