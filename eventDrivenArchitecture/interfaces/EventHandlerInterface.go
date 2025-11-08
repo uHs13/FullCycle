@@ -1,5 +1,5 @@
 package interfaces
 
 type EventHandlerInterface interface {
-	Handle(event EventInterface)
+	Handle(event EventInterface) error
 }
