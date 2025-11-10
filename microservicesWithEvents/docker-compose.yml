@@ -1,0 +1,30 @@
+services:
+  db:
+    container_name: golang_db
+    image: mariadb:10.4
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  phpmyadmin:
+    container_name: golang_phpmyadmin
+    image: phpmyadmin:5.2-apache
+    environment:
+      PMA_HOST: db
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+  golang:
+    container_name: golang_microservices
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
