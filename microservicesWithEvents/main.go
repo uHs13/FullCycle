@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import "microservices-wallet-core/cmd"
 
 func main() {
-	fmt.Println("Hello World!")
+	cmd.Execute()
 }
