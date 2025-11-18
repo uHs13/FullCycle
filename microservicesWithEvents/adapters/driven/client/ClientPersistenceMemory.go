@@ -14,6 +14,7 @@ const (
 type ClientPersistenceMemory struct {
 	DataSchema infraDataSchema.DataSchemaInterfaceInterface
 	forceError bool
+	useUuid    bool
 }
 
 func NewClientPersistenceMemory(dataSchema infraDataSchema.DataSchemaInterfaceInterface) *ClientPersistenceMemory {
@@ -33,6 +34,10 @@ func (persistence *ClientPersistenceMemory) FindById(uuid valueObject.UuidValueO
 		return nil, err
 	}
 
+	if persistence.useUuid {
+		mockClient.Id = uuid
+	}
+
 	return mockClient, nil
 }
 
@@ -46,4 +51,8 @@ func (persistence *ClientPersistenceMemory) Create(client *domainClient.Client) 
 
 func (persistence *ClientPersistenceMemory) DefineForceError(value bool) {
 	persistence.forceError = value
+}
+
+func (persistence *ClientPersistenceMemory) DefineUseUuid(value bool) {
+	persistence.useUuid = value
 }
