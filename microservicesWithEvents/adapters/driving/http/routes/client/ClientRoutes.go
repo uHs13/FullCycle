@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	GetClientByIdConst = "getClientById"
+	CreateClientConst = "createClient"
 )
 
 type ClientRoutes struct {
@@ -31,13 +31,13 @@ func NewClientRoutes(
 
 func createMapOfClientHandlers(database *infraDataSchema.Database) map[string]handlers.HandlerInterface {
 	return map[string]handlers.HandlerInterface{
-		GetClientByIdConst: clientHandler.NewGetClientByIdHandler(database),
+		CreateClientConst: clientHandler.NewCreateClientHandler(database),
 	}
 }
 
 func (clientRoutes *ClientRoutes) Register() {
-	clientRoutes.GET(
+	clientRoutes.POST(
 		routesConstants.GetClientRouteConst,
-		clientRoutes.clientHandlers[GetClientByIdConst].Handle,
+		clientRoutes.clientHandlers[CreateClientConst].Handle,
 	)
 }

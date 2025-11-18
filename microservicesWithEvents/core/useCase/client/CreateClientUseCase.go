@@ -2,10 +2,8 @@ package useCaseClient
 
 import (
 	"errors"
-	"fmt"
 	domainClient "microservices-wallet-core/core/domain/client"
 	portClient "microservices-wallet-core/core/port/client"
-	"os"
 	"time"
 )
 
@@ -45,8 +43,6 @@ func (useCase *CreateClientUseCase) Execute(input CreateClientUseCaseInput) (*Cr
 	}
 
 	if err := useCase.persistence.Create(client); err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
 		return nil, errors.New(notPossibleToCreateClientErrorMessage)
 	}
 
