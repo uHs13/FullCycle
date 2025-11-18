@@ -34,3 +34,7 @@ func (database *Database) Init() error {
 
 	return nil
 }
+
+func (database *Database) IsSqliteConnection() bool {
+	return database.connectionType == SqliteConnectionConst
+}

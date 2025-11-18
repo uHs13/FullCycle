@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"microservices-wallet-core/adapters/driving/http/routes/client"
+	infraDataSchema "microservices-wallet-core/infra/dataSchema"
 	"net/http"
 	"os"
 	"os/signal"
@@ -20,11 +21,12 @@ const (
 )
 
 type HttpServer struct {
-	server *http.Server
-	app    *gin.Engine
+	server   *http.Server
+	app      *gin.Engine
+	database *infraDataSchema.Database
 }
 
-func NewHttpServer() *HttpServer {
+func NewHttpServer(database *infraDataSchema.Database) *HttpServer {
 	gin.SetMode(gin.ReleaseMode)
 	app := gin.Default()
 
@@ -35,6 +37,7 @@ func NewHttpServer() *HttpServer {
 	return &HttpServer{
 		serverConfiguration,
 		app,
+		database,
 	}
 }
 
@@ -55,7 +58,16 @@ func (httpServer *HttpServer) Start() error {
 }
 
 func (httpServer *HttpServer) corsConfig() {
-	headers := handlers.AllowedHeaders([]string{"Origin", "Content-Type", "Accept", "Content-Length", "Accept-Language", "Accept-Encoding", "Connection", "Access-Control-Allow-Origin"})
+	headers := handlers.AllowedHeaders([]string{
+		"Origin",
+		"Content-Type",
+		"Accept",
+		"Content-Length",
+		"Accept-Language",
+		"Accept-Encoding",
+		"Connection",
+		"Access-Control-Allow-Origin",
+	})
 
 	origins := handlers.AllowedOrigins([]string{
 		originLocalhostConst,
@@ -77,7 +89,7 @@ func (httpServer *HttpServer) corsConfig() {
 }
 
 func (httpServer *HttpServer) registerRoutes() {
-	client.NewClientRoutes(httpServer.app).Register()
+	client.NewClientRoutes(httpServer.app, httpServer.database).Register()
 }
 
 func (httpServer *HttpServer) initialize() {

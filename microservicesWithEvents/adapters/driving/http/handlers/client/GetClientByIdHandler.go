@@ -7,16 +7,26 @@ import (
 	clientHandlerRequest "microservices-wallet-core/adapters/driving/http/handlers/client/request"
 	"microservices-wallet-core/adapters/driving/http/routes"
 	useCaseClient "microservices-wallet-core/core/useCase/client"
+	infraDataSchema "microservices-wallet-core/infra/dataSchema"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+var clientPersistence *drivenAdapterClientDataSchema.ClientPersistenceSqlite
+
 type GetClientByIdHandler struct {
+	database *infraDataSchema.Database
 }
 
-func NewGetClientByIdHandler() handlers.HandlerInterface {
-	return &GetClientByIdHandler{}
+func NewGetClientByIdHandler(database *infraDataSchema.Database) handlers.HandlerInterface {
+	return &GetClientByIdHandler{
+		database: database,
+	}
+}
+
+func (getClientByIdHandler *GetClientByIdHandler) GetDatabase() *infraDataSchema.Database {
+	return getClientByIdHandler.database
 }
 
 func (getClientByIdHandler *GetClientByIdHandler) Handle(context *gin.Context) {
@@ -39,7 +49,7 @@ func (getClientByIdHandler *GetClientByIdHandler) Handle(context *gin.Context) {
 		Email: requestData.Email,
 	}
 
-	sqlite, err := drivenAdapterClientDataSchema.NewClientPersistenceSqlite()
+	clientPersistence, err := handlers.DefinePersistenceByDbms(getClientByIdHandler)
 
 	if err != nil {
 		jsonResponse.ThrowCustomError(
@@ -51,23 +61,7 @@ func (getClientByIdHandler *GetClientByIdHandler) Handle(context *gin.Context) {
 		return
 	}
 
-	connection := sqlite.Database.Connection
-
-	table := "CREATE TABLE IF NOT EXISTS client(id string, name string, email string, createdAt string);"
-
-	statement, err := connection.Prepare(table)
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	_, err = statement.Exec()
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	persistence := drivenAdapterClient.NewClientPersistence(sqlite)
+	persistence := drivenAdapterClient.NewClientPersistence(clientPersistence)
 
 	useCase := useCaseClient.NewCreateClientUseCase(persistence)
 
@@ -83,5 +77,5 @@ func (getClientByIdHandler *GetClientByIdHandler) Handle(context *gin.Context) {
 		return
 	}
 
-	jsonResponse.SendJson("client", http.StatusOK, output)
+	jsonResponse.SendJson(clientResponseConst, http.StatusOK, output)
 }

@@ -5,6 +5,7 @@ import (
 	clientHandler "microservices-wallet-core/adapters/driving/http/handlers/client"
 	"microservices-wallet-core/adapters/driving/http/routes"
 	"microservices-wallet-core/adapters/driving/http/routesConstants"
+	infraDataSchema "microservices-wallet-core/infra/dataSchema"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,16 +21,17 @@ type ClientRoutes struct {
 
 func NewClientRoutes(
 	app *gin.Engine,
+	database *infraDataSchema.Database,
 ) routes.RoutesInterface {
 	return &ClientRoutes{
 		app,
-		createMapOfClientHandlers(),
+		createMapOfClientHandlers(database),
 	}
 }
 
-func createMapOfClientHandlers() map[string]handlers.HandlerInterface {
+func createMapOfClientHandlers(database *infraDataSchema.Database) map[string]handlers.HandlerInterface {
 	return map[string]handlers.HandlerInterface{
-		GetClientByIdConst: clientHandler.NewGetClientByIdHandler(),
+		GetClientByIdConst: clientHandler.NewGetClientByIdHandler(database),
 	}
 }
 

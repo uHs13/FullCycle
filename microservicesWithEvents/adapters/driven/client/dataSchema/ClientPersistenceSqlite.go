@@ -7,6 +7,7 @@ import (
 )
 
 const (
+	sqliteConst   = "sqlite3"
 	findByIdQuery = "SELECT id, name, email FROM client WHERE id = ?"
 	createQuery   = "INSERT INTO client (id, name, email) VALUES (?, ?, ?)"
 )
@@ -15,11 +16,17 @@ type ClientPersistenceSqlite struct {
 	Database *infraDataSchema.Database
 }
 
-func NewClientPersistenceSqlite() (*ClientPersistenceSqlite, error) {
-	database, err := infraDataSchema.NewDatabase("sqlite3")
+func NewClientPersistenceSqlite(database *infraDataSchema.Database) (*ClientPersistenceSqlite, error) {
+	if database == nil {
+		database, err := infraDataSchema.NewDatabase(sqliteConst)
 
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
+
+		return &ClientPersistenceSqlite{
+			Database: database,
+		}, nil
 	}
 
 	return &ClientPersistenceSqlite{
