@@ -11,6 +11,9 @@ type JsonResponse struct {
 const (
 	contentTypeConst     = "Content-Type"
 	applicationJsonConst = "application/json"
+	codeConst            = "code"
+	messageConst         = "message"
+	statusConst          = "status"
 )
 
 func NewJsonResponse(
@@ -30,4 +33,21 @@ func (jsonResponse *JsonResponse) SendJson(
 	jsonResponse.Writer.WriteHeader(statusCode)
 
 	jsonResponse.JSON(statusCode, map[string]interface{}{key: data})
+}
+
+func (jsonResponse *JsonResponse) ThrowCustomError(
+	err error,
+	statusCode int,
+	context *gin.Context,
+) {
+	jsonResponse.Writer.Header().Set(contentTypeConst, applicationJsonConst)
+	jsonResponse.Writer.WriteHeader(statusCode)
+
+	jsonResponse.JSON(
+		statusCode,
+		map[string]interface{}{
+			messageConst: err.Error(),
+			statusConst:  statusCode,
+		},
+	)
 }

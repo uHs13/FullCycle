@@ -1,6 +1,8 @@
 package jsonResponse
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 func ThrowError(message string) []byte {
 	errorStruct := struct {
