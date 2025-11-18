@@ -15,7 +15,7 @@ var ClientPersistence *drivenAdapterClientDataSchema.ClientPersistenceSqlite
 func SqliteCreateTable() {
 	table := "CREATE TABLE IF NOT EXISTS client(id string, name string, email string, createdAt string);"
 
-	ClientPersistence, _ = drivenAdapterClientDataSchema.NewClientPersistenceSqlite()
+	ClientPersistence, _ = drivenAdapterClientDataSchema.NewClientPersistenceSqlite(nil)
 
 	Connection = ClientPersistence.Database.Connection
 

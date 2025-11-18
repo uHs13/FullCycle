@@ -1,5 +1,6 @@
 package routesConstants
 
 const (
-	GetClientRouteConst = "/client"
+	CreateClientRouteConst = "/client"
+	FindClientRouteConst   = "/client"
 )
