@@ -82,3 +82,25 @@ func TestShouldProperlyFindAClient(t *testing.T) {
 	assert.Equal(t, clientDto.Name, foundClient.Name)
 	assert.Equal(t, clientDto.Email, foundClient.Email)
 }
+
+func TestShouldProperlyListAllClients(t *testing.T) {
+	SqliteCreateTable()
+
+	uuid := "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	clientDto := drivenAdapterClientDataSchema.NewClientDto()
+	clientDto.Id = uuid
+	clientDto.Name = "John Cena"
+	clientDto.Email = "john.cena@email.com"
+
+	ClientPersistence.Create(*clientDto)
+	ClientPersistence.Create(*clientDto)
+
+	foundClients, err := ClientPersistence.ListAll()
+
+	assert.Nil(t, err)
+	assert.Equal(t, len(foundClients), 2)
+	assert.Equal(t, clientDto.Name, foundClients[0].Name)
+	assert.Equal(t, clientDto.Email, foundClients[0].Email)
+	assert.Equal(t, clientDto.Name, foundClients[1].Name)
+	assert.Equal(t, clientDto.Email, foundClients[1].Email)
+}

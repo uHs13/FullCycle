@@ -53,3 +53,33 @@ func (clientPersistence *ClientPersistence) Create(client *domainClient.Client) 
 
 	return nil
 }
+
+func (clientPersistence *ClientPersistence) ListAll() ([]domainClient.Client, error) {
+	var clients []domainClient.Client
+
+	clientsDto, err := clientPersistence.operationsHandler.ListAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, clientDto := range clientsDto {
+		client, err := domainClient.NewClient(clientDto.Name, clientDto.Email)
+
+		if err != nil {
+			return nil, err
+		}
+
+		newUuid, err := valueObject.MakeFromString(clientDto.Id)
+
+		if err != nil {
+			return nil, err
+		}
+
+		client.DefineId(*newUuid)
+
+		clients = append(clients, *client)
+	}
+
+	return clients, nil
+}

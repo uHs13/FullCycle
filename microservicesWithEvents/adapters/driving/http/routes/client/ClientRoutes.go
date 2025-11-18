@@ -13,6 +13,7 @@ import (
 const (
 	CreateClientConst = "createClient"
 	FindClientConst   = "findClient"
+	ListClientsConst  = "listClients"
 )
 
 type ClientRoutes struct {
@@ -34,6 +35,7 @@ func createMapOfClientHandlers(database *infraDataSchema.Database) map[string]ha
 	return map[string]handlers.HandlerInterface{
 		CreateClientConst: clientHandler.NewCreateClientHandler(database),
 		FindClientConst:   clientHandler.NewFindClientByIdHandler(database),
+		ListClientsConst:  clientHandler.NewListClientsHandler(database),
 	}
 }
 
@@ -46,5 +48,10 @@ func (clientRoutes *ClientRoutes) Register() {
 	clientRoutes.GET(
 		routesConstants.FindClientRouteConst,
 		clientRoutes.clientHandlers[FindClientConst].Handle,
+	)
+
+	clientRoutes.GET(
+		routesConstants.ListClientsRouteConst,
+		clientRoutes.clientHandlers[ListClientsConst].Handle,
 	)
 }

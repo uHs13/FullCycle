@@ -8,4 +8,5 @@ import (
 type ClientPersistenceInterface interface {
 	FindById(uuid valueObject.UuidValueObject) (*domainClient.Client, error)
 	Create(client *domainClient.Client) error
+	ListAll() ([]domainClient.Client, error)
 }

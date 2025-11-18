@@ -10,6 +10,7 @@ const (
 	sqliteConst   = "sqlite3"
 	findByIdQuery = "SELECT id, name, email FROM client WHERE id = ?"
 	createQuery   = "INSERT INTO client (id, name, email) VALUES (?, ?, ?)"
+	listAllQuery  = "SELECT id, name, email FROM client"
 )
 
 type ClientPersistenceSqlite struct {
@@ -78,4 +79,33 @@ func (persistence *ClientPersistenceSqlite) Create(client ClientDto) error {
 	}
 
 	return nil
+}
+
+func (persistence *ClientPersistenceSqlite) ListAll() ([]ClientDto, error) {
+	var clientsDto []ClientDto
+	var clientDto ClientDto
+
+	statement, err := persistence.Database.Connection.Prepare(listAllQuery)
+
+	if err != nil {
+		return clientsDto, err
+	}
+
+	rows, err := statement.Query()
+
+	if err != nil {
+		return clientsDto, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&clientDto.Id, &clientDto.Name, &clientDto.Email); err != nil {
+			return clientsDto, nil
+		}
+
+		clientsDto = append(clientsDto, clientDto)
+	}
+
+	return clientsDto, nil
 }

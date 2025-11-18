@@ -49,6 +49,17 @@ func (persistence *ClientPersistenceMemory) Create(client *domainClient.Client) 
 	return nil
 }
 
+func (persistence *ClientPersistenceMemory) ListAll() ([]domainClient.Client, error) {
+	var clients []domainClient.Client
+
+	clientOne, _ := domainClient.NewClient("name", "email")
+	clientTwo, _ := domainClient.NewClient("name", "email")
+
+	clients = append(clients, *clientOne, *clientTwo)
+
+	return clients, nil
+}
+
 func (persistence *ClientPersistenceMemory) DefineForceError(value bool) {
 	persistence.forceError = value
 }

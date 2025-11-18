@@ -2,7 +2,6 @@ package useCaseClient
 
 import (
 	"errors"
-	"fmt"
 	domainClient "microservices-wallet-core/core/domain/client"
 	"microservices-wallet-core/core/domain/valueObject"
 	portClient "microservices-wallet-core/core/port/client"
@@ -46,8 +45,6 @@ func (useCase *FindClientByIdUseCase) Execute(input FindClientByIdUseCaseInput) 
 	client, err = useCase.persistence.FindById(*uuid)
 
 	if err != nil {
-		fmt.Println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-		fmt.Println(err.Error())
 		return nil, errors.New(notPossibleToFindClientErrorMessage)
 	}
 

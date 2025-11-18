@@ -1,5 +1,6 @@
 package clientHandler
 
 const (
-	clientResponseConst = "client"
+	clientResponseConst  = "client"
+	clientsResponseConst = "clients"
 )
