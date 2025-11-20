@@ -96,3 +96,27 @@ func TestShouldThrowAnErrorWhenWasNotPossibleToCreateTheAccount(t *testing.T) {
 	assert.Equal(t, err.Error(), "was not possible to create the account")
 	assert.Nil(t, output)
 }
+
+func TestShouldThrowAnErrorWhenAnAccountAlreadyExistForClient(t *testing.T) {
+	client, err := domainClient.NewClient("John Cena", "john.cena@email.com")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, client)
+
+	input := useCaseAccount.CreateAccountUseCaseInput{
+		Client: client,
+	}
+
+	dataSchema := infraDataSchema.NewDatabaseMemorySchema()
+	persistence := persistenceAccount.NewAccountPersistenceMemory(dataSchema)
+	persistence.DefineAccountAlreadyExist(true)
+	clientPersistence := persistenceClient.NewClientPersistenceMemory(dataSchema)
+
+	useCase := useCaseAccount.NewCreateAccountUseCase(persistence, clientPersistence)
+
+	output, err := useCase.Execute(input)
+
+	assert.NotNil(t, err)
+	assert.Equal(t, err.Error(), "an account already exist for the client")
+	assert.Nil(t, output)
+}

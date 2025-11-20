@@ -81,3 +81,43 @@ func TestShouldProperlyFindAClient(t *testing.T) {
 	assert.Equal(t, accountDto.ClientId, foundAccount.ClientId)
 	assert.Equal(t, accountDto.Balance, foundAccount.Balance)
 }
+
+func TestShouldReturnTrueWhenAccountAlreadyExistForClient(t *testing.T) {
+	SqliteCreateTable()
+
+	uuid := "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDto.Id = uuid
+	accountDto.ClientId = uuid
+	accountDto.Balance = 13
+
+	AccountPersistence.Create(*accountDto)
+
+	foundAccount, err := AccountPersistence.AlreadyExistForClient(accountDto)
+
+	assert.Nil(t, err)
+	assert.True(t, foundAccount)
+}
+
+func TestShouldReturnFalseWhenAccountDoesNotExistForClient(t *testing.T) {
+	SqliteCreateTable()
+
+	uuid := "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDto.Id = uuid
+	accountDto.ClientId = uuid
+	accountDto.Balance = 13
+
+	AccountPersistence.Create(*accountDto)
+
+	uuidTwo := "c6188c79-4aeb-4973-a24a-fa2d38cc951d"
+	accountDtoTwo := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDtoTwo.Id = uuidTwo
+	accountDtoTwo.ClientId = uuidTwo
+	accountDtoTwo.Balance = 13
+
+	foundAccount, err := AccountPersistence.AlreadyExistForClient(accountDtoTwo)
+
+	assert.Nil(t, err)
+	assert.False(t, foundAccount)
+}

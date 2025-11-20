@@ -13,6 +13,7 @@ const (
 	invalidClientErrorMessage              = "the account client must be valid"
 	notFoundClientErrorMessage             = "the account client was not found"
 	notPossibleToCreateAccountErrorMessage = "was not possible to create the account"
+	accountAlreadyExistErrorMessage        = "an account already exist for the client"
 )
 
 type CreateAccountUseCaseInput struct {
@@ -54,6 +55,16 @@ func (useCase *CreateAccountUseCase) Execute(input CreateAccountUseCaseInput) (*
 
 	if err != nil {
 		return nil, err
+	}
+
+	exist, err := useCase.persistence.AlreadyExistForClient(account)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if exist {
+		return nil, errors.New(accountAlreadyExistErrorMessage)
 	}
 
 	if err := useCase.persistence.Create(account); err != nil {

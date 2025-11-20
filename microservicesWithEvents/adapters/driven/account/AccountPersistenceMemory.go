@@ -13,9 +13,10 @@ const (
 )
 
 type AccountPersistenceMemory struct {
-	DataSchema  infraDataSchema.DataSchemaInterfaceInterface
-	forceError  bool
-	withBalance bool
+	DataSchema          infraDataSchema.DataSchemaInterfaceInterface
+	forceError          bool
+	withBalance         bool
+	accountAlreadyExist bool
 }
 
 func NewAccountPersistenceMemory(dataSchema infraDataSchema.DataSchemaInterfaceInterface) *AccountPersistenceMemory {
@@ -47,10 +48,22 @@ func (persistence *AccountPersistenceMemory) Create(account *domainAccount.Accou
 	return nil
 }
 
+func (persistence *AccountPersistenceMemory) AlreadyExistForClient(account *domainAccount.Account) (bool, error) {
+	if persistence.accountAlreadyExist {
+		return true, nil
+	}
+
+	return false, nil
+}
+
 func (persistence *AccountPersistenceMemory) DefineForceError(value bool) {
 	persistence.forceError = value
 }
 
 func (persistence *AccountPersistenceMemory) DefineWithBalance(value bool) {
 	persistence.withBalance = value
+}
+
+func (persistence *AccountPersistenceMemory) DefineAccountAlreadyExist(value bool) {
+	persistence.accountAlreadyExist = value
 }

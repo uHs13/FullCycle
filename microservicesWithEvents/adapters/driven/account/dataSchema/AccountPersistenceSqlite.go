@@ -7,8 +7,9 @@ import (
 )
 
 const (
-	findByIdQuery = "SELECT id, clientId, balance FROM account WHERE id = ?"
-	createQuery   = "INSERT INTO account (id, clientId, balance) VALUES (?, ?, ?)"
+	findByIdQuery              = "SELECT id, clientId, balance FROM account WHERE id = ?"
+	createQuery                = "INSERT INTO account (id, clientId, balance) VALUES (?, ?, ?)"
+	alreadyExistForClientQuery = "SELECT EXISTS(SELECT id FROM account WHERE clientId = ?)"
 )
 
 type AccountPersistenceSqlite struct {
@@ -71,4 +72,25 @@ func (persistence *AccountPersistenceSqlite) Create(account AccountDto) error {
 	}
 
 	return nil
+}
+
+func (persistence *AccountPersistenceSqlite) AlreadyExistForClient(
+	account *AccountDto,
+) (bool, error) {
+	statement, err := persistence.Database.Connection.Prepare(alreadyExistForClientQuery)
+
+	if err != nil {
+		return false, err
+	}
+
+	var exist bool
+	err = statement.QueryRow(account.ClientId).Scan(&exist)
+
+	defer statement.Close()
+
+	if err != nil {
+		return false, err
+	}
+
+	return exist, nil
 }
