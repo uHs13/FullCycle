@@ -59,7 +59,7 @@ func (persistence *AccountPersistenceSqlite) FindById(uuid string) (*drivenAdapt
 	return &accountDto, nil
 }
 
-func (persistence *AccountPersistenceSqlite) Create(account drivenAdapterAccountDataSchema.AccountDto) error {
+func (persistence *AccountPersistenceSqlite) Create(account *drivenAdapterAccountDataSchema.AccountDto) error {
 	statement, err := persistence.Database.Connection.Prepare(createQuery)
 
 	if err != nil {

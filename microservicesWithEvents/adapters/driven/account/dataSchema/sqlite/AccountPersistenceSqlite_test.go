@@ -32,7 +32,7 @@ func SqliteCreateTable() {
 	}
 }
 
-func TestShouldProperlyCreateAClient(t *testing.T) {
+func TestShouldProperlyCreateAnAccount(t *testing.T) {
 	SqliteCreateTable()
 
 	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
@@ -40,7 +40,7 @@ func TestShouldProperlyCreateAClient(t *testing.T) {
 	accountDto.ClientId = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(*accountDto)
+	AccountPersistence.Create(accountDto)
 
 	rows, err := Connection.Query("SELECT id, clientId, balance FROM account WHERE id = 'c6188c79-4aeb-4973-a24a-fa2d38cc951c'")
 
@@ -64,7 +64,7 @@ func TestShouldProperlyCreateAClient(t *testing.T) {
 	assert.Equal(t, accountDto.Balance, balance)
 }
 
-func TestShouldProperlyFindAClient(t *testing.T) {
+func TestShouldProperlyFindAnAccount(t *testing.T) {
 	SqliteCreateTable()
 
 	uuid := "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
@@ -73,7 +73,7 @@ func TestShouldProperlyFindAClient(t *testing.T) {
 	accountDto.ClientId = uuid
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(*accountDto)
+	AccountPersistence.Create(accountDto)
 
 	foundAccount, err := AccountPersistence.FindById(uuid)
 
@@ -92,7 +92,7 @@ func TestShouldReturnTrueWhenAccountAlreadyExistForClient(t *testing.T) {
 	accountDto.ClientId = uuid
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(*accountDto)
+	AccountPersistence.Create(accountDto)
 
 	foundAccount, err := AccountPersistence.AlreadyExistForClient(accountDto)
 
@@ -109,7 +109,7 @@ func TestShouldReturnFalseWhenAccountDoesNotExistForClient(t *testing.T) {
 	accountDto.ClientId = uuid
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(*accountDto)
+	AccountPersistence.Create(accountDto)
 
 	uuidTwo := "c6188c79-4aeb-4973-a24a-fa2d38cc951d"
 	accountDtoTwo := drivenAdapterAccountDataSchema.NewAccountDto()

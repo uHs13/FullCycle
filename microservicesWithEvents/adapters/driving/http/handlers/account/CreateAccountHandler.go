@@ -1,12 +1,15 @@
 package accountHandler
 
 import (
+	drivenAdapterAccount "microservices-wallet-core/adapters/driven/account"
+	drivenAdapterClient "microservices-wallet-core/adapters/driven/client"
 	drivenAdapterClientDataSchema "microservices-wallet-core/adapters/driven/client/dataSchema"
 	"microservices-wallet-core/adapters/driving/http/handlers"
 	accountHandlerRequest "microservices-wallet-core/adapters/driving/http/handlers/account/request"
 	"microservices-wallet-core/adapters/driving/http/routes"
 	domainClient "microservices-wallet-core/core/domain/client"
 	"microservices-wallet-core/core/domain/valueObject"
+	useCaseAccount "microservices-wallet-core/core/useCase/account"
 	infraDataSchema "microservices-wallet-core/infra/dataSchema"
 	"net/http"
 
@@ -55,40 +58,53 @@ func (createAccountHandler *CreateAccountHandler) Handle(context *gin.Context) {
 		return
 	}
 
+	accountConnection, err := handlers.DefineAccountPersistenceByDbms(createAccountHandler)
+
+	if err != nil {
+		jsonResponse.ThrowCustomError(
+			err,
+			http.StatusInternalServerError,
+			context,
+		)
+
+		return
+	}
+
+	clientConnection, err := handlers.DefinePersistenceByDbms(createAccountHandler)
+
+	if err != nil {
+		jsonResponse.ThrowCustomError(
+			err,
+			http.StatusInternalServerError,
+			context,
+		)
+
+		return
+	}
+
 	client := domainClient.Client{}
 	client.DefineId(*uuid)
 
-	// input := useCaseAccount.CreateAccountUseCaseInput{
-	// 	Client: &client,
-	// }
+	input := useCaseAccount.CreateAccountUseCaseInput{
+		Client: &client,
+	}
 
-	// clientPersistence, err := handlers.DefineAccountPersistenceByDbms(createAccountHandler)
+	persistence := drivenAdapterAccount.NewAccountPersistence(accountConnection)
+	clientPersistence := drivenAdapterClient.NewClientPersistence(clientConnection)
 
-	// if err != nil {
-	// 	jsonResponse.ThrowCustomError(
-	// 		err,
-	// 		http.StatusInternalServerError,
-	// 		context,
-	// 	)
+	useCase := useCaseAccount.NewCreateAccountUseCase(persistence, clientPersistence)
 
-	// 	return
-	// }
+	output, err := useCase.Execute(input)
 
-	// persistence := drivenAdapterClient.NewClientPersistence(clientPersistence)
+	if err != nil {
+		jsonResponse.ThrowCustomError(
+			err,
+			http.StatusBadRequest,
+			context,
+		)
 
-	// useCase := useCaseClient.NewCreateClientUseCase(persistence)
+		return
+	}
 
-	// output, err := useCase.Execute(input)
-
-	// if err != nil {
-	// 	jsonResponse.ThrowCustomError(
-	// 		err,
-	// 		http.StatusBadRequest,
-	// 		context,
-	// 	)
-
-	// 	return
-	// }
-
-	jsonResponse.SendJson(accountResponseConst, http.StatusOK, client)
+	jsonResponse.SendJson(accountResponseConst, http.StatusOK, output)
 }

@@ -76,6 +76,10 @@ func CreateSqliteTables() error {
 		return err
 	}
 
+	if err := CreateAccountTable(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -83,6 +87,26 @@ func CreateClientTable() error {
 	connection := Database.Connection
 
 	table := "CREATE TABLE IF NOT EXISTS client(id string, name string, email string, createdAt string);"
+
+	statement, err := connection.Prepare(table)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = statement.Exec()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return nil
+}
+
+func CreateAccountTable() error {
+	connection := Database.Connection
+
+	table := "CREATE TABLE IF NOT EXISTS account(id string, clientId string, balance float);"
 
 	statement, err := connection.Prepare(table)
 
