@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"microservices-wallet-core/adapters/driving/http/routes/account"
 	"microservices-wallet-core/adapters/driving/http/routes/client"
 	infraDataSchema "microservices-wallet-core/infra/dataSchema"
 	"net/http"
@@ -90,6 +91,7 @@ func (httpServer *HttpServer) corsConfig() {
 
 func (httpServer *HttpServer) registerRoutes() {
 	client.NewClientRoutes(httpServer.app, httpServer.database).Register()
+	account.NewAccountRoutes(httpServer.app, httpServer.database).Register()
 }
 
 func (httpServer *HttpServer) initialize() {

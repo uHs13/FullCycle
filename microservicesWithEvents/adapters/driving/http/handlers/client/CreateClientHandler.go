@@ -2,7 +2,7 @@ package clientHandler
 
 import (
 	drivenAdapterClient "microservices-wallet-core/adapters/driven/client"
-	drivenAdapterClientDataSchemaSqlite "microservices-wallet-core/adapters/driven/client/dataSchema/sqlite"
+	drivenAdapterClientDataSchema "microservices-wallet-core/adapters/driven/client/dataSchema"
 	"microservices-wallet-core/adapters/driving/http/handlers"
 	clientHandlerRequest "microservices-wallet-core/adapters/driving/http/handlers/client/request"
 	"microservices-wallet-core/adapters/driving/http/routes"
@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var clientPersistence *drivenAdapterClientDataSchemaSqlite.ClientPersistenceSqlite
+var clientPersistence *drivenAdapterClientDataSchema.OperationsHandlerInterface
 
 type CreateClientHandler struct {
 	database *infraDataSchema.Database
