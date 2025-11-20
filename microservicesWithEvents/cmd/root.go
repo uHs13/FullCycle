@@ -4,13 +4,17 @@ import (
 	"log"
 	"microservices-wallet-core/adapters/driving/http"
 	infraDataSchema "microservices-wallet-core/infra/dataSchema"
+	infraDotEnv "microservices-wallet-core/infra/dotEnv"
 	"os"
 
 	"github.com/spf13/cobra"
 )
 
 var Database *infraDataSchema.Database
-var dbms string = "sqlite3"
+
+// var dbms string = "sqlite3"
+
+var dbms string = "mysql"
 
 var rootCmd = &cobra.Command{
 	Use:   "microservices-wallet-core",
@@ -24,6 +28,10 @@ var rootCmd = &cobra.Command{
 }
 
 func createApplicationNeeds() error {
+	if err := DefineEnv(); err != nil {
+		return err
+	}
+
 	if err := CreateDatabaseConnection(); err != nil {
 		return err
 	}
@@ -37,6 +45,14 @@ func createApplicationNeeds() error {
 	server := http.NewHttpServer(Database)
 
 	if err := server.Start(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DefineEnv() error {
+	if err := infraDotEnv.Load(); err != nil {
 		return err
 	}
 
@@ -84,8 +100,7 @@ func CreateClientTable() error {
 }
 
 func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }

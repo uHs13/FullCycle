@@ -38,3 +38,7 @@ func (database *Database) Init() error {
 func (database *Database) IsSqliteConnection() bool {
 	return database.connectionType == SqliteConnectionConst
 }
+
+func (database *Database) IsMysqlConnection() bool {
+	return database.connectionType == MysqlConnectionConst
+}

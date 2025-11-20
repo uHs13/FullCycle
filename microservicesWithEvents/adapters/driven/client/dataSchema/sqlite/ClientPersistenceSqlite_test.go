@@ -1,0 +1,107 @@
+package drivenAdapterClientDataSchemaSqlite_test
+
+import (
+	"database/sql"
+	drivenAdapterClientDataSchema "microservices-wallet-core/adapters/driven/client/dataSchema"
+	drivenAdapterClientDataSchemaSqlite "microservices-wallet-core/adapters/driven/client/dataSchema/sqlite"
+	"testing"
+
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/assert"
+)
+
+var Connection *sql.DB
+var ClientPersistence *drivenAdapterClientDataSchemaSqlite.ClientPersistenceSqlite
+
+func SqliteCreateTable() {
+	table := "CREATE TABLE IF NOT EXISTS client(id string, name string, email string, createdAt string);"
+
+	ClientPersistence, _ = drivenAdapterClientDataSchemaSqlite.NewClientPersistenceSqlite(nil)
+
+	Connection = ClientPersistence.Database.Connection
+
+	statement, err := Connection.Prepare(table)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = statement.Exec()
+
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func TestShouldProperlyCreateAClient(t *testing.T) {
+	SqliteCreateTable()
+
+	clientDto := drivenAdapterClientDataSchema.NewClientDto()
+	clientDto.Id = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	clientDto.Name = "John Cena"
+	clientDto.Email = "john.cena@email.com"
+
+	ClientPersistence.Create(*clientDto)
+
+	rows, err := Connection.Query("SELECT id, name, email FROM client WHERE id = 'c6188c79-4aeb-4973-a24a-fa2d38cc951c'")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer rows.Close()
+
+	var id, name, email string
+	for rows.Next() {
+		err := rows.Scan(&id, &name, &email)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	assert.Equal(t, clientDto.Id, id)
+	assert.Equal(t, clientDto.Name, name)
+	assert.Equal(t, clientDto.Email, email)
+	assert.Equal(t, clientDto.Email, email)
+}
+
+func TestShouldProperlyFindAClient(t *testing.T) {
+	SqliteCreateTable()
+
+	uuid := "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	clientDto := drivenAdapterClientDataSchema.NewClientDto()
+	clientDto.Id = uuid
+	clientDto.Name = "John Cena"
+	clientDto.Email = "john.cena@email.com"
+
+	ClientPersistence.Create(*clientDto)
+
+	foundClient, err := ClientPersistence.FindById(uuid)
+
+	assert.Nil(t, err)
+	assert.Equal(t, clientDto.Id, foundClient.Id)
+	assert.Equal(t, clientDto.Name, foundClient.Name)
+	assert.Equal(t, clientDto.Email, foundClient.Email)
+}
+
+func TestShouldProperlyListAllClients(t *testing.T) {
+	SqliteCreateTable()
+
+	uuid := "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	clientDto := drivenAdapterClientDataSchema.NewClientDto()
+	clientDto.Id = uuid
+	clientDto.Name = "John Cena"
+	clientDto.Email = "john.cena@email.com"
+
+	ClientPersistence.Create(*clientDto)
+	ClientPersistence.Create(*clientDto)
+
+	foundClients, err := ClientPersistence.ListAll()
+
+	assert.Nil(t, err)
+	assert.Equal(t, len(foundClients), 2)
+	assert.Equal(t, clientDto.Name, foundClients[0].Name)
+	assert.Equal(t, clientDto.Email, foundClients[0].Email)
+	assert.Equal(t, clientDto.Name, foundClients[1].Name)
+	assert.Equal(t, clientDto.Email, foundClients[1].Email)
+}

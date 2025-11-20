@@ -3,6 +3,8 @@ package handlers
 import (
 	"errors"
 	drivenAdapterClientDataSchema "microservices-wallet-core/adapters/driven/client/dataSchema"
+	drivenAdapterClientDataSchemaMysql "microservices-wallet-core/adapters/driven/client/dataSchema/mysql"
+	drivenAdapterClientDataSchemaSqlite "microservices-wallet-core/adapters/driven/client/dataSchema/sqlite"
 )
 
 const (
@@ -10,11 +12,21 @@ const (
 )
 
 func DefinePersistenceByDbms(handler HandlerInterface) (
-	*drivenAdapterClientDataSchema.ClientPersistenceSqlite,
+	drivenAdapterClientDataSchema.OperationsHandlerInterface,
 	error,
 ) {
 	if handler.GetDatabase().IsSqliteConnection() {
-		clientPersistence, err := drivenAdapterClientDataSchema.NewClientPersistenceSqlite(handler.GetDatabase())
+		clientPersistence, err := drivenAdapterClientDataSchemaSqlite.NewClientPersistenceSqlite(handler.GetDatabase())
+
+		if err != nil {
+			return nil, err
+		}
+
+		return clientPersistence, nil
+	}
+
+	if handler.GetDatabase().IsMysqlConnection() {
+		clientPersistence, err := drivenAdapterClientDataSchemaMysql.NewClientPersistenceMysql(handler.GetDatabase())
 
 		if err != nil {
 			return nil, err
