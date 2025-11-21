@@ -5,5 +5,6 @@ const (
 	FindClientRouteConst   = "/client"
 	ListClientsRouteConst  = "/clients"
 
-	CreateAccountRouteConst = "/account"
+	CreateAccountRouteConst    = "/account"
+	DepositInAccountRouteConst = "/account/deposit"
 )

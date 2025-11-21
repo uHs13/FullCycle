@@ -11,7 +11,8 @@ import (
 )
 
 const (
-	CreateAccountConst = "createClient"
+	CreateAccountConst    = "createAccount"
+	DepositInAccountConst = "depositInAccount"
 )
 
 type AccountRoutes struct {
@@ -31,7 +32,8 @@ func NewAccountRoutes(
 
 func createMapOfAccountHandlers(database *infraDataSchema.Database) map[string]handlers.HandlerInterface {
 	return map[string]handlers.HandlerInterface{
-		CreateAccountConst: accountHandler.NewCreateAccountHandler(database),
+		CreateAccountConst:    accountHandler.NewCreateAccountHandler(database),
+		DepositInAccountConst: accountHandler.NewDepositInAccountHandler(database),
 	}
 }
 
@@ -39,5 +41,10 @@ func (accountRoutes *AccountRoutes) Register() {
 	accountRoutes.POST(
 		routesConstants.CreateAccountRouteConst,
 		accountRoutes.accountHandlers[CreateAccountConst].Handle,
+	)
+
+	accountRoutes.POST(
+		routesConstants.DepositInAccountRouteConst,
+		accountRoutes.accountHandlers[DepositInAccountConst].Handle,
 	)
 }

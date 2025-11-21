@@ -40,7 +40,9 @@ func TestShouldProperlyCreateAnAccount(t *testing.T) {
 	accountDto.ClientId = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(accountDto)
+	err := AccountPersistence.Create(accountDto)
+
+	assert.Nil(t, err)
 
 	rows, err := Connection.Query("SELECT id, clientId, balance FROM account WHERE id = 'c6188c79-4aeb-4973-a24a-fa2d38cc951c'")
 
@@ -73,7 +75,9 @@ func TestShouldProperlyFindAnAccount(t *testing.T) {
 	accountDto.ClientId = uuid
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(accountDto)
+	err := AccountPersistence.Create(accountDto)
+
+	assert.Nil(t, err)
 
 	foundAccount, err := AccountPersistence.FindById(uuid)
 
@@ -92,7 +96,9 @@ func TestShouldReturnTrueWhenAccountAlreadyExistForClient(t *testing.T) {
 	accountDto.ClientId = uuid
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(accountDto)
+	err := AccountPersistence.Create(accountDto)
+
+	assert.Nil(t, err)
 
 	foundAccount, err := AccountPersistence.AlreadyExistForClient(accountDto)
 
@@ -109,7 +115,9 @@ func TestShouldReturnFalseWhenAccountDoesNotExistForClient(t *testing.T) {
 	accountDto.ClientId = uuid
 	accountDto.Balance = 13
 
-	AccountPersistence.Create(accountDto)
+	err := AccountPersistence.Create(accountDto)
+
+	assert.Nil(t, err)
 
 	uuidTwo := "c6188c79-4aeb-4973-a24a-fa2d38cc951d"
 	accountDtoTwo := drivenAdapterAccountDataSchema.NewAccountDto()
@@ -121,4 +129,46 @@ func TestShouldReturnFalseWhenAccountDoesNotExistForClient(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.False(t, foundAccount)
+}
+
+func TestShouldProperlyDepositIntoAccount(t *testing.T) {
+	SqliteCreateTable()
+
+	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDto.Id = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	accountDto.ClientId = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	accountDto.Balance = 0
+
+	err := AccountPersistence.Create(accountDto)
+
+	assert.Nil(t, err)
+
+	depositValue := 13.0
+
+	accountDto.Balance = depositValue
+
+	err = AccountPersistence.Deposit(accountDto)
+
+	assert.Nil(t, err)
+
+	rows, err := Connection.Query("SELECT id, clientId, balance FROM account WHERE id = 'c6188c79-4aeb-4973-a24a-fa2d38cc951c'")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer rows.Close()
+
+	var id, clientId string
+	var balance float64
+	for rows.Next() {
+		err := rows.Scan(&id, &clientId, &balance)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	assert.Equal(t, accountDto.Id, id)
+	assert.Equal(t, accountDto.ClientId, clientId)
+	assert.Equal(t, accountDto.Balance, depositValue)
 }

@@ -11,6 +11,7 @@ const (
 	findByIdQuery              = "SELECT id, clientId, balance FROM account WHERE id = ?"
 	createQuery                = "INSERT INTO account (id, clientId, balance) VALUES (?, ?, ?)"
 	alreadyExistForClientQuery = "SELECT EXISTS(SELECT id FROM account WHERE clientId = ?)"
+	depositQuery               = "UPDATE account SET balance = ? WHERE id = ?"
 )
 
 type AccountPersistenceSqlite struct {
@@ -100,4 +101,27 @@ func (persistence *AccountPersistenceSqlite) AlreadyExistForClient(
 	}
 
 	return exist, nil
+}
+
+func (persistence *AccountPersistenceSqlite) Deposit(
+	account *drivenAdapterAccountDataSchema.AccountDto,
+) error {
+	statement, err := persistence.Database.Connection.Prepare(depositQuery)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = statement.Exec(
+		account.Balance,
+		account.Id,
+	)
+
+	defer statement.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

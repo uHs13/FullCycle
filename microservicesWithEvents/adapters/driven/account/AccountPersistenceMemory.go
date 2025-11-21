@@ -17,6 +17,8 @@ type AccountPersistenceMemory struct {
 	forceError          bool
 	withBalance         bool
 	accountAlreadyExist bool
+	specificUuid        bool
+	depositError        bool
 }
 
 func NewAccountPersistenceMemory(dataSchema infraDataSchema.DataSchemaInterfaceInterface) *AccountPersistenceMemory {
@@ -35,6 +37,10 @@ func (persistence *AccountPersistenceMemory) FindById(uuid valueObject.UuidValue
 
 	if persistence.withBalance {
 		mockAccount.Credit(1000)
+	}
+
+	if persistence.specificUuid {
+		mockAccount.Id = uuid
 	}
 
 	return mockAccount, nil
@@ -56,6 +62,14 @@ func (persistence *AccountPersistenceMemory) AlreadyExistForClient(account *doma
 	return false, nil
 }
 
+func (persistence *AccountPersistenceMemory) Deposit(account *domainAccount.Account) error {
+	if persistence.depositError {
+		return errors.New(mockErrorMessage)
+	}
+
+	return nil
+}
+
 func (persistence *AccountPersistenceMemory) DefineForceError(value bool) {
 	persistence.forceError = value
 }
@@ -66,4 +80,12 @@ func (persistence *AccountPersistenceMemory) DefineWithBalance(value bool) {
 
 func (persistence *AccountPersistenceMemory) DefineAccountAlreadyExist(value bool) {
 	persistence.accountAlreadyExist = value
+}
+
+func (persistence *AccountPersistenceMemory) DefineSpecificUuid(value bool) {
+	persistence.specificUuid = value
+}
+
+func (persistence *AccountPersistenceMemory) DefineDepositError(value bool) {
+	persistence.depositError = value
 }

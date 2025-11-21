@@ -79,3 +79,16 @@ func (persistence *AccountPersistence) AlreadyExistForClient(account *domainAcco
 
 	return exist, nil
 }
+
+func (persistence *AccountPersistence) Deposit(account *domainAccount.Account) error {
+	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDto.Id = account.Id.GetValue()
+	accountDto.ClientId = account.Client.Id.GetValue()
+	accountDto.Balance = account.Balance
+
+	if err := persistence.operationsHandler.Deposit(accountDto); err != nil {
+		return err
+	}
+
+	return nil
+}

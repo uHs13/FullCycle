@@ -161,3 +161,45 @@ func TestShouldReturnFalseWhenAccountDoesNotExistForClient(t *testing.T) {
 	assert.Nil(t, err)
 	assert.False(t, foundAccount)
 }
+
+func TestShouldProperlyDepositIntoAccount(t *testing.T) {
+	MysqlSetup()
+
+	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDto.Id = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	accountDto.ClientId = "c6188c79-4aeb-4973-a24a-fa2d38cc951c"
+	accountDto.Balance = 0
+
+	err := MysqlAccountPersistence.Create(accountDto)
+
+	assert.Nil(t, err)
+
+	depositValue := 13.0
+
+	accountDto.Balance = depositValue
+
+	err = MysqlAccountPersistence.Deposit(accountDto)
+
+	assert.Nil(t, err)
+
+	rows, err := MysqlConnection.Query("SELECT id, client_id, balance FROM account WHERE id = 'c6188c79-4aeb-4973-a24a-fa2d38cc951c'")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer rows.Close()
+
+	var id, clientId string
+	var balance float64
+	for rows.Next() {
+		err := rows.Scan(&id, &clientId, &balance)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	assert.Equal(t, accountDto.Id, id)
+	assert.Equal(t, accountDto.ClientId, clientId)
+	assert.Equal(t, accountDto.Balance, depositValue)
+}
