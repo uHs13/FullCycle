@@ -1,4 +1,4 @@
-package persistenceTransaction
+package drivenAdapterTransaction
 
 import (
 	"errors"

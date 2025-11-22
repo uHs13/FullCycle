@@ -29,7 +29,7 @@ func TestShouldProperlyDepositInAccount(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, output)
 	assert.Equal(t, output.Id, id)
-	assert.Equal(t, output.Amount, amount)
+	assert.Equal(t, output.DepositAmount, amount)
 	assert.NotNil(t, output.DateTime)
 }
 

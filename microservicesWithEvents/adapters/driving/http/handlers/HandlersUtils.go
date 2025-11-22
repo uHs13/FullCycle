@@ -8,6 +8,8 @@ import (
 	drivenAdapterClientDataSchema "microservices-wallet-core/adapters/driven/client/dataSchema"
 	drivenAdapterClientDataSchemaMysql "microservices-wallet-core/adapters/driven/client/dataSchema/mysql"
 	drivenAdapterClientDataSchemaSqlite "microservices-wallet-core/adapters/driven/client/dataSchema/sqlite"
+	drivenAdapterTransactionDataSchema "microservices-wallet-core/adapters/driven/transaction/dataSchema"
+	drivenAdapterTransactionDataSchemaSqlite "microservices-wallet-core/adapters/driven/transaction/dataSchema/sqlite"
 )
 
 const (
@@ -64,6 +66,33 @@ func DefineAccountPersistenceByDbms(handler HandlerInterface) (
 
 		return clientPersistence, nil
 	}
+
+	return nil, errors.New(notValidDbmsOptionConst)
+}
+
+func DefineTransactionPersistenceByDbms(handler HandlerInterface) (
+	drivenAdapterTransactionDataSchema.OperationsHandlerInterface,
+	error,
+) {
+	if handler.GetDatabase().IsSqliteConnection() {
+		accountPersistence, err := drivenAdapterTransactionDataSchemaSqlite.NewTransactionPersistenceSqlite(handler.GetDatabase())
+
+		if err != nil {
+			return nil, err
+		}
+
+		return accountPersistence, nil
+	}
+
+	// if handler.GetDatabase().IsMysqlConnection() {
+	// 	clientPersistence, err := drivenAdapterAccountDataSchemaMysql.NewAccountPersistenceMysql(handler.GetDatabase())
+
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+
+	// 	return clientPersistence, nil
+	// }
 
 	return nil, errors.New(notValidDbmsOptionConst)
 }

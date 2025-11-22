@@ -12,9 +12,9 @@ import (
 
 var Database *infraDataSchema.Database
 
-// var dbms string = "sqlite3"
+var dbms string = "sqlite3"
 
-var dbms string = "mysql"
+// var dbms string = "mysql"
 
 var rootCmd = &cobra.Command{
 	Use:   "microservices-wallet-core",
@@ -80,6 +80,10 @@ func CreateSqliteTables() error {
 		return err
 	}
 
+	if err := CreateTransactionTable(); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -107,6 +111,26 @@ func CreateAccountTable() error {
 	connection := Database.Connection
 
 	table := "CREATE TABLE IF NOT EXISTS account(id string, clientId string, balance float);"
+
+	statement, err := connection.Prepare(table)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = statement.Exec()
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return nil
+}
+
+func CreateTransactionTable() error {
+	connection := Database.Connection
+
+	table := "CREATE TABLE IF NOT EXISTS transactions(id string, accountFromId string, accountToId string, amount float);"
 
 	statement, err := connection.Prepare(table)
 

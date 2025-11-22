@@ -12,13 +12,13 @@ const (
 	invalidAmountConst   = "the amount cannot be zero or negative"
 )
 
-type DepositInAccousntRequest struct {
+type DepositInAccountRequest struct {
 	AccountId string  `json:"account_id"`
 	Amount    float64 `json:"amount"`
 }
 
-func NewDepositInAccountRequest(context *gin.Context) (*DepositInAccousntRequest, error) {
-	request := &DepositInAccousntRequest{}
+func NewDepositInAccountRequest(context *gin.Context) (*DepositInAccountRequest, error) {
+	request := &DepositInAccountRequest{}
 
 	if err := json.NewDecoder(context.Request.Body).Decode(&request); err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func NewDepositInAccountRequest(context *gin.Context) (*DepositInAccousntRequest
 	return request, nil
 }
 
-func (request *DepositInAccousntRequest) validate() error {
+func (request *DepositInAccountRequest) validate() error {
 	if len(request.AccountId) == 0 {
 		return errors.New(invalidIdLengthConst)
 	}

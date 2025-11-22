@@ -7,4 +7,6 @@ const (
 
 	CreateAccountRouteConst    = "/account"
 	DepositInAccountRouteConst = "/account/deposit"
+
+	CreateTransactionRouteConst = "/transaction"
 )
