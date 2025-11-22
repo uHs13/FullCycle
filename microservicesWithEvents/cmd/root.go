@@ -12,9 +12,9 @@ import (
 
 var Database *infraDataSchema.Database
 
-var dbms string = "sqlite3"
+// var dbms string = "sqlite3"
 
-// var dbms string = "mysql"
+var dbms string = "mysql"
 
 var rootCmd = &cobra.Command{
 	Use:   "microservices-wallet-core",

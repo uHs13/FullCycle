@@ -7,3 +7,8 @@ INSERT INTO `account` (`id`, `client_id`, `balance`, `createdAt`)
 VALUES
 ('099d1227-ae19-448c-ab13-c04b2d5e2ae0', '099d1227-ae19-448c-ab13-c04b2d5e2ae0', 1000000, CURRENT_TIMESTAMP),
 ('86993261-7548-4fa2-90e1-aeeaccd7121f', '86993261-7548-4fa2-90e1-aeeaccd7121f', 1000000, CURRENT_TIMESTAMP);
+
+INSERT INTO `transaction` (`id`, `account_id_from`, `account_id_to`, `amount`, `createdAt`)
+VALUES
+('099d1227-ae19-448c-ab13-c04b2d5e2ae0', '099d1227-ae19-448c-ab13-c04b2d5e2ae0', '86993261-7548-4fa2-90e1-aeeaccd7121f', 10, CURRENT_TIMESTAMP),
+('86993261-7548-4fa2-90e1-aeeaccd7121f', '86993261-7548-4fa2-90e1-aeeaccd7121f', '099d1227-ae19-448c-ab13-c04b2d5e2ae0', 10, CURRENT_TIMESTAMP);

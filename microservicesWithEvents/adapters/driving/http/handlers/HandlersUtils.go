@@ -9,6 +9,7 @@ import (
 	drivenAdapterClientDataSchemaMysql "microservices-wallet-core/adapters/driven/client/dataSchema/mysql"
 	drivenAdapterClientDataSchemaSqlite "microservices-wallet-core/adapters/driven/client/dataSchema/sqlite"
 	drivenAdapterTransactionDataSchema "microservices-wallet-core/adapters/driven/transaction/dataSchema"
+	drivenAdapterTransactionDataSchemaMysql "microservices-wallet-core/adapters/driven/transaction/dataSchema/mysql"
 	drivenAdapterTransactionDataSchemaSqlite "microservices-wallet-core/adapters/driven/transaction/dataSchema/sqlite"
 )
 
@@ -84,15 +85,15 @@ func DefineTransactionPersistenceByDbms(handler HandlerInterface) (
 		return accountPersistence, nil
 	}
 
-	// if handler.GetDatabase().IsMysqlConnection() {
-	// 	clientPersistence, err := drivenAdapterAccountDataSchemaMysql.NewAccountPersistenceMysql(handler.GetDatabase())
+	if handler.GetDatabase().IsMysqlConnection() {
+		transactionPersistence, err := drivenAdapterTransactionDataSchemaMysql.NewTransactionPersistenceMysql(handler.GetDatabase())
 
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
+		if err != nil {
+			return nil, err
+		}
 
-	// 	return clientPersistence, nil
-	// }
+		return transactionPersistence, nil
+	}
 
 	return nil, errors.New(notValidDbmsOptionConst)
 }
