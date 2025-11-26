@@ -10,4 +10,5 @@ type AccountPersistenceInterface interface {
 	Create(account *domainAccount.Account) error
 	AlreadyExistForClient(account *domainAccount.Account) (bool, error)
 	Deposit(account *domainAccount.Account) error
+	UpdateBalance(account *domainAccount.Account) error
 }

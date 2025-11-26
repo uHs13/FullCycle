@@ -70,6 +70,14 @@ func (useCase *CreateTransactionUseCase) Execute(input CreateTransactionUseCaseI
 		return nil, err
 	}
 
+	if err := useCase.accountPersistence.UpdateBalance(transaction.AccountFrom); err != nil {
+		return nil, err
+	}
+
+	if err := useCase.accountPersistence.UpdateBalance(transaction.AccountTo); err != nil {
+		return nil, err
+	}
+
 	if err := useCase.transactionPersistence.Create(*transaction); err != nil {
 		return nil, errors.New(transactionCreateErrorMessage)
 	}

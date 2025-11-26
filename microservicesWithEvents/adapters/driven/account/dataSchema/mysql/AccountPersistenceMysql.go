@@ -11,6 +11,7 @@ const (
 	createQuery                = "INSERT INTO account (id, client_id, balance) VALUES (?, ?, ?)"
 	alreadyExistForClientQuery = "SELECT EXISTS(SELECT id FROM account WHERE client_id = ?)"
 	depositQuery               = "UPDATE account SET balance = ? WHERE id = ?"
+	updateBalanceQuery         = "UPDATE account SET balance = ? WHERE id = ?"
 )
 
 type AccountPersistenceMysql struct {
@@ -106,6 +107,29 @@ func (persistence *AccountPersistenceMysql) Deposit(
 	account *drivenAdapterAccountDataSchema.AccountDto,
 ) error {
 	statement, err := persistence.Database.Connection.Prepare(depositQuery)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = statement.Exec(
+		account.Balance,
+		account.Id,
+	)
+
+	defer statement.Close()
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (persistence *AccountPersistenceMysql) UpdateBalance(
+	account *drivenAdapterAccountDataSchema.AccountDto,
+) error {
+	statement, err := persistence.Database.Connection.Prepare(updateBalanceQuery)
 
 	if err != nil {
 		return err

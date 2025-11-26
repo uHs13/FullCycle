@@ -70,6 +70,14 @@ func (persistence *AccountPersistenceMemory) Deposit(account *domainAccount.Acco
 	return nil
 }
 
+func (persistence *AccountPersistenceMemory) UpdateBalance(account *domainAccount.Account) error {
+	if persistence.depositError {
+		return errors.New(mockErrorMessage)
+	}
+
+	return nil
+}
+
 func (persistence *AccountPersistenceMemory) DefineForceError(value bool) {
 	persistence.forceError = value
 }

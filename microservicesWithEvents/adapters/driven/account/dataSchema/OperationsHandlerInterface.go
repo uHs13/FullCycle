@@ -5,4 +5,5 @@ type OperationsHandlerInterface interface {
 	Create(account *AccountDto) error
 	AlreadyExistForClient(account *AccountDto) (bool, error)
 	Deposit(account *AccountDto) error
+	UpdateBalance(account *AccountDto) error
 }

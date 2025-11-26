@@ -92,3 +92,15 @@ func (persistence *AccountPersistence) Deposit(account *domainAccount.Account) e
 
 	return nil
 }
+
+func (persistence *AccountPersistence) UpdateBalance(account *domainAccount.Account) error {
+	accountDto := drivenAdapterAccountDataSchema.NewAccountDto()
+	accountDto.Id = account.Id.GetValue()
+	accountDto.Balance = account.Balance
+
+	if err := persistence.operationsHandler.UpdateBalance(accountDto); err != nil {
+		return err
+	}
+
+	return nil
+}
