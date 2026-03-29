@@ -4,6 +4,7 @@ import (
 	persistenceAccount "microservices-wallet-core/adapters/driven/account"
 	"microservices-wallet-core/adapters/driven/event/dispatcher"
 	"microservices-wallet-core/adapters/driven/event/event"
+	"microservices-wallet-core/adapters/driven/kafka"
 	persistenceTransaction "microservices-wallet-core/adapters/driven/transaction"
 	domainAccount "microservices-wallet-core/core/domain/account"
 	domainClient "microservices-wallet-core/core/domain/client"
@@ -46,6 +47,7 @@ func TestShouldProperlyCreateATransaction(t *testing.T) {
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)
@@ -86,6 +88,7 @@ func TestShouldThrowAnExceptionWhenAccountFromIsNotFound(t *testing.T) {
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)
@@ -127,6 +130,7 @@ func TestShouldThrowAnExceptionWhenAccountToIsNotFound(t *testing.T) {
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)
@@ -167,6 +171,7 @@ func TestShouldThrowAnExceptionWhenAmountIsZero(t *testing.T) {
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)
@@ -207,6 +212,7 @@ func TestShouldThrowAnExceptionWhenAmountIsLowerThanZero(t *testing.T) {
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)
@@ -247,6 +253,7 @@ func TestShouldThrowAnExceptionWhenThereIsNotEnoughBalaceToCompleteTheTransactio
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)
@@ -289,6 +296,7 @@ func TestShouldThrowAnErrorWhenWasNotPossibleToCreateTheTransaction(t *testing.T
 		accountPersistenceMemory,
 		eventDispatcher,
 		createTransactionEvent,
+		kafka.NewProducerMemory(),
 	)
 
 	output, err := useCase.Execute(input)

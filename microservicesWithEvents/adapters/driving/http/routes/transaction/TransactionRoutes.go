@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"microservices-wallet-core/adapters/driven/kafka"
 	"microservices-wallet-core/adapters/driving/http/handlers"
 	transactionHandler "microservices-wallet-core/adapters/driving/http/handlers/transaction"
 	"microservices-wallet-core/adapters/driving/http/routes"
@@ -17,21 +18,27 @@ const (
 type TransactionRoutes struct {
 	*gin.Engine
 	accountHandlers map[string]handlers.HandlerInterface
+	kafkaProducer   *kafka.Producer
 }
 
 func NewTransactionRoutes(
 	app *gin.Engine,
 	database *infraDataSchema.Database,
+	kafkaProducer *kafka.Producer,
 ) routes.RoutesInterface {
 	return &TransactionRoutes{
 		app,
-		createMapOfTransactionHandlers(database),
+		createMapOfTransactionHandlers(database, kafkaProducer),
+		kafkaProducer,
 	}
 }
 
-func createMapOfTransactionHandlers(database *infraDataSchema.Database) map[string]handlers.HandlerInterface {
+func createMapOfTransactionHandlers(
+	database *infraDataSchema.Database,
+	kafkaProducer *kafka.Producer,
+) map[string]handlers.HandlerInterface {
 	return map[string]handlers.HandlerInterface{
-		CreateTransactionConst: transactionHandler.NewCreateTransactionHandler(database),
+		CreateTransactionConst: transactionHandler.NewCreateTransactionHandler(database, kafkaProducer),
 	}
 }
 

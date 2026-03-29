@@ -3,7 +3,8 @@ package transactionHandler
 import (
 	drivenAdapterAccount "microservices-wallet-core/adapters/driven/account"
 	"microservices-wallet-core/adapters/driven/event/dispatcher"
-	"microservices-wallet-core/adapters/driven/event/event"
+	eventTransaction "microservices-wallet-core/adapters/driven/event/event/Transaction"
+	"microservices-wallet-core/adapters/driven/kafka"
 	drivenAdapterTransaction "microservices-wallet-core/adapters/driven/transaction"
 	"microservices-wallet-core/adapters/driving/http/handlers"
 	transactionHandlerRequest "microservices-wallet-core/adapters/driving/http/handlers/transaction/request"
@@ -18,12 +19,17 @@ import (
 )
 
 type CreateTransactionHandler struct {
-	database *infraDataSchema.Database
+	database      *infraDataSchema.Database
+	kafkaProducer *kafka.Producer
 }
 
-func NewCreateTransactionHandler(database *infraDataSchema.Database) handlers.HandlerInterface {
+func NewCreateTransactionHandler(
+	database *infraDataSchema.Database,
+	kafkaProducer *kafka.Producer,
+) handlers.HandlerInterface {
 	return &CreateTransactionHandler{
-		database: database,
+		database:      database,
+		kafkaProducer: kafkaProducer,
 	}
 }
 
@@ -94,7 +100,6 @@ func (createTransactionHandler *CreateTransactionHandler) Handle(context *gin.Co
 			http.StatusBadRequest,
 			context,
 		)
-
 		return
 	}
 
@@ -110,7 +115,7 @@ func (createTransactionHandler *CreateTransactionHandler) Handle(context *gin.Co
 		return
 	}
 
-	event := event.NewEvent("CreateTransactionEvent")
+	event := eventTransaction.NewTransactionCreatedEvent()
 	eventDispatcher := dispatcher.NewEventDispatcher()
 
 	transactionPersistence := drivenAdapterTransaction.NewTransactionPersistence(transactionConnection)
@@ -121,6 +126,7 @@ func (createTransactionHandler *CreateTransactionHandler) Handle(context *gin.Co
 		accountPersistence,
 		eventDispatcher,
 		event,
+		createTransactionHandler.kafkaProducer,
 	)
 
 	if err != nil {

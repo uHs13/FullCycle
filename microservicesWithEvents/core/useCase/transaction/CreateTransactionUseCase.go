@@ -2,6 +2,8 @@ package useCaseTransaction
 
 import (
 	"errors"
+	eventTransaction "microservices-wallet-core/adapters/driven/event/event/Transaction"
+	eventHandlerTransaction "microservices-wallet-core/adapters/driven/event/eventHandler/Transaction"
 	domainAccount "microservices-wallet-core/core/domain/account"
 	domainTransaction "microservices-wallet-core/core/domain/transaction"
 	portAccount "microservices-wallet-core/core/port/account"
@@ -31,6 +33,7 @@ type CreateTransactionUseCase struct {
 	accountPersistence     portAccount.AccountPersistenceInterface
 	eventDispatcher        portEvent.EventDispatcherInterface
 	event                  portEvent.EventInterface
+	kafkaProducer          portEvent.EventProducerInterface
 }
 
 func NewCreateTransactionUseCase(
@@ -38,12 +41,14 @@ func NewCreateTransactionUseCase(
 	accountPersistence portAccount.AccountPersistenceInterface,
 	eventDispatcher portEvent.EventDispatcherInterface,
 	event portEvent.EventInterface,
+	kafkaProducer portEvent.EventProducerInterface,
 ) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
 		transactionPersistence: transactionPersistence,
 		accountPersistence:     accountPersistence,
 		eventDispatcher:        eventDispatcher,
 		event:                  event,
+		kafkaProducer:          kafkaProducer,
 	}
 }
 
@@ -87,7 +92,9 @@ func (useCase *CreateTransactionUseCase) Execute(input CreateTransactionUseCaseI
 		CreatedAt: transaction.CreatedAt,
 	}
 
+	eventHander := eventHandlerTransaction.NewTransactionCreatedHandler(useCase.kafkaProducer)
 	useCase.event.SetPayload(output)
+	useCase.eventDispatcher.Register(eventTransaction.TransactionCreatedEventName, eventHander)
 	useCase.eventDispatcher.Dispatch(useCase.event)
 
 	return output, nil

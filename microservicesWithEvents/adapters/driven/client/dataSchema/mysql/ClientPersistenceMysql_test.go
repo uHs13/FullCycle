@@ -15,7 +15,8 @@ var MysqlClientPersistence *drivenAdapterClientDataSchemaMysql.ClientPersistence
 
 func MysqlSetup() {
 	MysqlOpenConnection()
-	MysqlDropTable()
+	MysqlDropAccountTable()
+	MysqlDropClientTable()
 	MysqlCreateTable()
 }
 
@@ -29,7 +30,25 @@ func MysqlOpenConnection() {
 	MysqlConnection = MysqlClientPersistence.Database.Connection
 }
 
-func MysqlDropTable() {
+func MysqlDropAccountTable() {
+	table := `
+		DROP TABLE IF EXISTS account;
+	`
+
+	statement, err := MysqlConnection.Prepare(table)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = statement.Exec()
+
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func MysqlDropClientTable() {
 	table := `
 		DROP TABLE IF EXISTS client;
 	`

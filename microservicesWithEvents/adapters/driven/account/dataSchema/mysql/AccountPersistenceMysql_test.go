@@ -15,7 +15,8 @@ var MysqlAccountPersistence *drivenAdapterAccountDataSchemaMysql.AccountPersiste
 
 func MysqlSetup() {
 	MysqlOpenConnection()
-	MysqlDropTable()
+	MysqlDropTableTransactionTable()
+	MysqlDropTableAccountTable()
 	MysqlCreateTable()
 }
 
@@ -29,7 +30,25 @@ func MysqlOpenConnection() {
 	MysqlConnection = MysqlAccountPersistence.Database.Connection
 }
 
-func MysqlDropTable() {
+func MysqlDropTableTransactionTable() {
+	table := `
+		DROP TABLE IF EXISTS transaction;
+	`
+
+	statement, err := MysqlConnection.Prepare(table)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	_, err = statement.Exec()
+
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
+func MysqlDropTableAccountTable() {
 	table := `
 		DROP TABLE IF EXISTS account;
 	`

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"microservices-wallet-core/adapters/driven/kafka"
 	"microservices-wallet-core/adapters/driving/http/routes/account"
 	"microservices-wallet-core/adapters/driving/http/routes/client"
 	"microservices-wallet-core/adapters/driving/http/routes/transaction"
@@ -15,6 +16,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/handlers"
+
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 const (
@@ -23,9 +26,10 @@ const (
 )
 
 type HttpServer struct {
-	server   *http.Server
-	app      *gin.Engine
-	database *infraDataSchema.Database
+	server        *http.Server
+	app           *gin.Engine
+	database      *infraDataSchema.Database
+	kafkaProducer *kafka.Producer
 }
 
 func NewHttpServer(database *infraDataSchema.Database) *HttpServer {
@@ -36,10 +40,16 @@ func NewHttpServer(database *infraDataSchema.Database) *HttpServer {
 		Addr: defaultServerPortConst,
 	}
 
+	var kakfaProducer *kafka.Producer = kafka.NewKafkaProducer(&ckafka.ConfigMap{
+		"bootstrap.servers": "kafka:29092",
+		"group.id":          "wallet",
+	})
+
 	return &HttpServer{
 		serverConfiguration,
 		app,
 		database,
+		kakfaProducer,
 	}
 }
 
@@ -93,7 +103,7 @@ func (httpServer *HttpServer) corsConfig() {
 func (httpServer *HttpServer) registerRoutes() {
 	client.NewClientRoutes(httpServer.app, httpServer.database).Register()
 	account.NewAccountRoutes(httpServer.app, httpServer.database).Register()
-	transaction.NewTransactionRoutes(httpServer.app, httpServer.database).Register()
+	transaction.NewTransactionRoutes(httpServer.app, httpServer.database, httpServer.kafkaProducer).Register()
 }
 
 func (httpServer *HttpServer) initialize() {
