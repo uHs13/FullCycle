@@ -19,6 +19,24 @@ services:
       - 8080:80
     depends_on:
       - db
+
+  db-setup:
+    container_name: golang_db_setup
+    image: mariadb:10.4
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_NAME: golangdb
+    volumes:
+      - ./infra/dataSchema/fixtures:/usr/src/app/infra/dataSchema/fixtures
+      - ./migrations.sh:/usr/src/app/migrations.sh
+    working_dir: /usr/src/app
+    command: ["sh", "-c", "./migrations.sh"]
+    restart: "no"
+
   golang:
     container_name: golang_microservices
     build: .
@@ -27,7 +45,7 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - db
+      - db-setup
 
   zookeeper:
     image: confluentinc/cp-zookeeper:6.1.0
