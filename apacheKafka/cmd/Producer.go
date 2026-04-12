@@ -13,7 +13,10 @@ type Producer struct {
 
 func NewKafkaProducer() *Producer {
 	configMap := &kafka.ConfigMap{
-		"bootstrap.servers": "apachekafka-kafka-1:9092",
+		"bootstrap.servers":   "apachekafka-kafka-1:9092",
+		"delivery.timeout.ms": "2000",
+		"acks":                "all",
+		"enable.idempotence":  "true",
 	}
 
 	producer, err := kafka.NewProducer(configMap)

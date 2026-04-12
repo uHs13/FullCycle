@@ -18,7 +18,7 @@ func main() {
 	producer.Publish(
 		message,
 		"teste",
-		nil,
+		[]byte("transfers"),
 		deliveryChannel,
 	)
 
